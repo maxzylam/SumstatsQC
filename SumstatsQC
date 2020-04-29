@@ -1,0 +1,98 @@
+#!/bin/bash
+
+###############################################################
+#### SumstatsQC Dev version 2 #################################
+###############################################################
+
+################################################################
+##### Define help script #######################################
+    # Notes: This is the main module of the sumstats QC pipeline
+    # SumstatsQC Interface 
+
+    function helpscript {
+        echo ""
+        echo ""
+        echo "This script will help process reference panels" 
+        echo "on GWAS summary statistics for downstream analysis"
+        echo ""
+        echo "Please run the script as follows"
+        echo ""
+        echo "./SumstatsQC.sh [OPTIONS]"
+        echo ""
+        echo "  --help                              ### show this help and exit"
+        echo "  --batch={Y|N}                       ### use batch column definition"
+        echo "  --batchfile={batch.txt}             ### batch column definitions"
+        echo "  --sumstats={sumstatsfile.gz}        ### summary statistics"
+        echo "  --qt={Binary|Quantitative}          ### Types of traits"
+        echo "  --pop={1000g_eas|1000g_eur|sg10k_eas|hrc_eur} ### string based on 1000G/HRC/SG10K"
+        echo "  --INFO_score=0.3                    ### Imputation quality score, could also be Rsq, default=0.3"
+        echo "  --AF=0.005                          ### Effect Allele frequency, default=0.005"
+        echo "  --AFB=0.15                          ### Allele frequency band, default=0.15"
+        echo "  --AMB=0.4                           ### Ambiguous allele AF threshold, default=0.4"
+        echo "  --prefix={prefix}                   ### phenotype name"
+        echo "  --multicpu={Y/N}                    ### allow multiple cpus for processing"
+        echo ""
+        echo ""
+        echo "exiting ..."
+        echo ""
+        echo ""
+    }
+################################################################
+
+###############################################################
+#### Assigned User parameters #################################
+
+
+
+    while [ "$1" != "" ];do
+        PARAM=`echo $1 | awk -F= '{print $1}'`
+        VALUE=`echo $1 | awk -F= '{print $2}'`
+        case $PARAM in
+                -h | --help)
+                        helpscript
+                        exit 1
+                        ;;
+                --batch)
+                        batch=$VALUE
+                        ;;
+                --batchfile)
+                        batchfile=$VALUE
+                        ;;
+                --sumstats)
+                        sumstats=$VALUE
+                        ;;
+                --pop)
+                        pop=$VALUE
+                        ;;
+                --qt)
+                        qt=$VALUE
+                        ;;
+                --INFO_score)
+                        INFO_score=$VALUE
+                        ;;
+                --AF)
+                        AF=$VALUE
+                        ;;
+                --AFB)
+                        AFB=$VALUE
+                        ;;
+                --AMB)
+                        AMB=$VALUE
+                        ;;
+                --prefix)
+                        prefix=$VALUE
+                        ;;
+                --multicpu)
+                        multicpu=$VALUE
+                        ;;
+                $)
+                        echo "ERROR:unknown parameter \ "$PARAM\ ""
+                        helpscript
+                esac
+                shift
+    done
+
+###############################################################
+
+        # Execute SumstatsQC
+        (source ./01_SumstatsQC_main_module.sh --batch=$batch --batchfile=$batchfile --sumstats=$sumstats --pop=$pop --qt=$qt --INFO_score=$INFO_score --AF=$AF --AFB=$AFB --AMB=$AMB --prefix=$prefix --multicpu=$multicpu)
