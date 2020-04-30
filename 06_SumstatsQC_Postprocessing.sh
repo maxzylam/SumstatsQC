@@ -136,119 +136,121 @@
 ######################################
 #### Post processing procedures ######
 # Note after QC apply headers would be as follows
-        # 1-UID 2-UIDref 3-SNP 4-A1 5-A2 6-F1 7-F2 8-Status 9-UID 10-SNP 11-CHR 12-BP 13-A1 14-A2 15-FRQ 16-INFO 17-OR 18-SE 19-P 20-Nca 21-Nco 22-Z 23-AFdiff 24-AT_CG 25-AF_qc 26-INFOSc_qc 27-AFB_qc 28-AMB_qc [Binary Trait]
-        # 1-UID 2-UIDref 3-SNP 4-A1 5-A2 6-F1 7-F2 8-Status 9-UID 10-SNP 11-CHR 12-BP 13-A1 14-A2 15-FRQ 16-INFO 17-BETA 18-SE 19-P 20-NSample 21-Z 22-AFdiff 23-AT_CG 24-AF_qc 25-INFOSc_qc 26-AFB_qc 27-AMB_qc [Quantitative Trait]
+        # 1-UID 2-UIDref 3-SNP 4-A1 5-A2 6-F1 7-F2 8-Status 9-SNP 10-CHR 11-BP 12-A1 13-A2 14-FRQ 15-INFO 16-OR 17-SE 18-P 19-Nca 20-Nco 21-Z 22-AFdiff 23-AT_CG 24-AF_qc 25-INFOSc_qc 26-AFB_qc 27-AMB_qc [Binary Trait]
+        # 1-UID 2-UIDref 3-SNP 4-A1 5-A2 6-F1 7-F2 8-Status 9-SNP 10-CHR 11-BP 12-A1 13-A2 14-FRQ 15-INFO 16-BETA 17-SE 18-P 19-NSample 20-Z 21-AFdiff 22-AT_CG 23-AF_qc 24-INFOSc_qc 25-AFB_qc 26-AMB_qc [Quantitative Trait]
 
     # Consolidate processed files 
     
     if [ "$qt" == "Binary" ]; then 
 
         # Original non-qc-ed files (autosomes only)
-        echo "UID SNP CHR BP A1 A2 FRQ INFO OR SE P Nca Nco Z" > "$sumstats_1".qc.input."$pop".sumstats.5.non-qc-ed.txt
+        echo "UID SNP CHR BP A1 A2 FRQ INFO OR SE P Nca Nco Z" > "$sumstats_1".qc.input."$pop".$prefix.sumstats.5.non-qc-ed.txt
 
         for i in {1..22}
             do 
-            echo "cat "$sumstats_1".qc.input."$pop".sumstats.3.chr"$i" | sed '1,1d' | awk '{if(\$11 > 0) print \$0}' | awk '{if(\$11 <= 1) print \$0}' >> "$sumstats_1".qc.input."$pop".sumstats.5.non-qc-ed.txt"
+            echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.3.chr"$i" | sed '1,1d' | awk '{if(\$11 > 0) print \$0}' | awk '{if(\$11 <= 1) print \$0}' >> "$sumstats_1".qc.input."$pop".$prefix.sumstats.5.non-qc-ed.txt"
         done > $prefix.consolidate.processed.files.sh
 
+        # out of bound pvalues
         for i in {1..22}
             do 
-            echo "cat "$sumstats_1".qc.input."$pop".sumstats.3.chr"$i" | sed '1,1d' | awk '{if(\$11 <= 0) print \$0}' | awk '{if(\$11 > 1) print \$0}' >> "$sumstats_1".qc.input."$pop".sumstats.5.OB_pval.txt"
-        done > $prefix.consolidate.processed.files.sh
+            echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.3.chr"$i" | sed '1,1d' | awk '{if(\$11 <= 0) print \$0}' | awk '{if(\$11 > 1) print \$0}' >> "$sumstats_1".qc.input."$pop".$prefix.sumstats.5.OB_pval.txt"
+        done >> $prefix.consolidate.processed.files.sh
 
         # unmatched variants
-        echo "UID SNP CHR BP A1 A2 FRQ INFO OR SE P Nca Nco Z Status" > "$sumstats_1".qc.input."$pop".sumstats.ref.5.unmatched.qcparams.txt
+        echo "UID SNP CHR BP A1 A2 FRQ INFO OR SE P Nca Nco Z Status" > "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.unmatched.qcparams.txt
 
         for i in {1..22}
             do 
-            echo "cat "$sumstats_1".qc.input."$pop".sumstats.ref.4.unmatched.chr"$i" | sed '1,1d' | awk '{print \$0, \"unmatched\"}' >> "$sumstats_1".qc.input."$pop".sumstats.ref.5.unmatched.qcparams.txt"
+            echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.4.unmatched.chr"$i" | sed '1,1d' | awk '{print \$0, \"unmatched\"}' >> "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.unmatched.qcparams.txt"
         done >> $prefix.consolidate.processed.files.sh
  
         # Ref - Sumstats - Direct Match
-        echo "1-UID 2-UIDref 3-SNP 4-A1 5-A2 6-F1 7-F2 8-Status 9-UID 10-SNP 11-CHR 12-BP 13-A1 14-A2 15-FRQ 16-INFO 17-OR 18-SE 19-P 20-Nca 21-Nco 22-Z 23-AFdiff 24-AT_CG 25-AF_qc 26-INFOSc_qc 27-AFB_qc 28-AMB_qc" > "$sumstats_1".qc.input."$pop".sumstats.ref.5.match.qcparams.txt
+        echo "1-UID 2-UIDref 3-SNP 4-A1 5-A2 6-F1 7-F2 8-Status 9-SNP 10-CHR 11-BP 12-A1 13-A2 14-FRQ 15-INFO 16-OR 17-SE 18-P 19-Nca 20-Nco 21-Z 22-AFdiff 23-AT_CG 24-AF_qc 25-INFOSc_qc 26-AFB_qc 27-AMB_qc" > "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.match.qcparams.txt
 
         for i in {1..22}
             do 
-            echo "cat "$sumstats_1".qc.input."$pop".sumstats.ref.5.match.qcparams.chr"$i" | sed '1,1d' >> "$sumstats_1".qc.input."$pop".sumstats.ref.5.match.qcparams.txt" 
+            echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.match.qcparams.chr"$i" | sed '1,1d' >> "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.match.qcparams.txt" 
         done >> $prefix.consolidate.processed.files.sh
 
         # Ref - Sumstat - Allele Flip 
-        echo "1-UID 2-UIDref 3-SNP 4-A1 5-A2 6-F1 7-F2 8-Status 9-UID 10-SNP 11-CHR 12-BP 13-A1 14-A2 15-FRQ 16-INFO 17-OR 18-SE 19-P 20-Nca 21-Nco 22-Z 23-AFdiff 24-AT_CG 25-AF_qc 26-INFOSc_qc 27-AFB_qc 28-AMB_qc" > "$sumstats_1".qc.input."$pop".sumstats.ref.5.flip.qcparams.txt
+        echo "1-UID 2-UIDref 3-SNP 4-A1 5-A2 6-F1 7-F2 8-Status 9-SNP 10-CHR 11-BP 12-A1 13-A2 14-FRQ 15-INFO 16-OR 17-SE 18-P 19-Nca 20-Nco 21-Z 22-AFdiff 23-AT_CG 24-AF_qc 25-INFOSc_qc 26-AFB_qc 27-AMB_qc" > "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.flip.qcparams.txt
         
         for i in {1..22}
             do 
-            echo "cat "$sumstats_1".qc.input."$pop".sumstats.ref.5.flip.qcparams.chr"$i" | sed '1,1d' >> "$sumstats_1".qc.input."$pop".sumstats.ref.5.flip.qcparams.txt" 
+            echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.flip.qcparams.chr"$i" | sed '1,1d' >> "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.flip.qcparams.txt" 
         done >> $prefix.consolidate.processed.files.sh
 
         # Ref - Sumstats - altstrand
-        echo "1-UID 2-UIDref 3-SNP 4-A1 5-A2 6-F1 7-F2 8-Status 9-UID 10-SNP 11-CHR 12-BP 13-A1 14-A2 15-FRQ 16-INFO 17-OR 18-SE 19-P 20-Nca 21-Nco 22-Z 23-AFdiff 24-AT_CG 25-AF_qc 26-INFOSc_qc 27-AFB_qc 28-AMB_qc"  > "$sumstats_1".qc.input."$pop".sumstats.ref.5.altstrand.qcparams.txt
+        echo "1-UID 2-UIDref 3-SNP 4-A1 5-A2 6-F1 7-F2 8-Status 9-SNP 10-CHR 11-BP 12-A1 13-A2 14-FRQ 15-INFO 16-OR 17-SE 18-P 19-Nca 20-Nco 21-Z 22-AFdiff 23-AT_CG 24-AF_qc 25-INFOSc_qc 26-AFB_qc 27-AMB_qc"  > "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.altstrand.qcparams.txt
         
         for i in {1..22}
             do 
-            echo "cat "$sumstats_1".qc.input."$pop".sumstats.ref.5.altstrand.qcparams.chr"$i" | sed '1,1d' >> "$sumstats_1".qc.input."$pop".sumstats.ref.5.altstrand.qcparams.txt" 
+            echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.altstrand.qcparams.chr"$i" | sed '1,1d' >> "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.altstrand.qcparams.txt" 
         done >> $prefix.consolidate.processed.files.sh
 
         # Ref - Sumstats - altstrandflip
-        echo "1-UID 2-UIDref 3-SNP 4-A1 5-A2 6-F1 7-F2 8-Status 9-UID 10-SNP 11-CHR 12-BP 13-A1 14-A2 15-FRQ 16-INFO 17-OR 18-SE 19-P 20-Nca 21-Nco 22-Z 23-AFdiff 24-AT_CG 25-AF_qc 26-INFOSc_qc 27-AFB_qc 28-AMB_qc"  > "$sumstats_1".qc.input."$pop".sumstats.ref.5.altstrandflp.qcparams.txt
+        echo "1-UID 2-UIDref 3-SNP 4-A1 5-A2 6-F1 7-F2 8-Status 9-SNP 10-CHR 11-BP 12-A1 13-A2 14-FRQ 15-INFO 16-OR 17-SE 18-P 19-Nca 20-Nco 21-Z 22-AFdiff 23-AT_CG 24-AF_qc 25-INFOSc_qc 26-AFB_qc 27-AMB_qc"  > "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.altstrandflp.qcparams.txt
         
         for i in {1..22}
             do 
-            echo "cat "$sumstats_1".qc.input."$pop".sumstats.ref.5.altstrandflp.qcparams.chr"$i" | sed '1,1d' >> "$sumstats_1".qc.input."$pop".sumstats.ref.5.altstrandflp.qcparams.txt" 
+            echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.altstrandflp.qcparams.chr"$i" | sed '1,1d' >> "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.altstrandflp.qcparams.txt" 
         done >> $prefix.consolidate.processed.files.sh
 
     elif [ "$qt" == "Quantitative" ]; then
         
         # Original non-qc-ed files (autosomes only)
-        echo "UID SNP CHR BP A1 A2 FRQ INFO BETA SE P NSample Z" > "$sumstats_1".qc.input."$pop".sumstats.5.non-qc-ed.txt
+        echo "UID SNP CHR BP A1 A2 FRQ INFO BETA SE P NSample Z" > "$sumstats_1".qc.input."$pop".$prefix.sumstats.5.non-qc-ed.txt
 
         for i in {1..22}
             do 
-            echo "cat "$sumstats_1".qc.input."$pop".sumstats.3.chr"$i" | sed '1,1d' | awk '{if(\$11 > 0) print \$0}' | awk '{if(\$11 <= 1) print \$0}' >> "$sumstats_1".qc.input."$pop".sumstats.5.non-qc-ed.txt"
+            echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.3.chr"$i" | sed '1,1d' | awk '{if(\$11 > 0) print \$0}' | awk '{if(\$11 <= 1) print \$0}' >> "$sumstats_1".qc.input."$pop".$prefix.sumstats.5.non-qc-ed.txt"
         done > $prefix.consolidate.processed.files.sh
 
+        # out of bound pvalues
         for i in {1..22}
             do 
-            echo "cat "$sumstats_1".qc.input."$pop".sumstats.3.chr"$i" | sed '1,1d' | awk '{if(\$11 <= 0) print \$0}' | awk '{if(\$11 > 1) print \$0}' >> "$sumstats_1".qc.input."$pop".sumstats.5.OB_pval.txt"
-        done > $prefix.consolidate.processed.files.sh
+            echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.3.chr"$i" | sed '1,1d' | awk '{if(\$11 <= 0) print \$0}' | awk '{if(\$11 > 1) print \$0}' >> "$sumstats_1".qc.input."$pop".$prefix.sumstats.5.OB_pval.txt"
+        done >> $prefix.consolidate.processed.files.sh
 
         # unmatched variants
-        echo "UID SNP CHR BP A1 A2 FRQ INFO OR SE P NSample Z Status" > "$sumstats_1".qc.input."$pop".sumstats.ref.5.unmatched.qcparams.txt
+        echo "UID SNP CHR BP A1 A2 FRQ INFO OR SE P NSample Z Status" > "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.unmatched.qcparams.txt
 
         for i in {1..22}
             do 
-            echo "cat "$sumstats_1".qc.input."$pop".sumstats.ref.4.unmatched.chr"$i" | sed '1,1d' | awk '{print \$0, \"unmatched\"}' >> "$sumstats_1".qc.input."$pop".sumstats.ref.5.unmatched.qcparams.txt"
+            echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.4.unmatched.chr"$i" | sed '1,1d' | awk '{print \$0, \"unmatched\"}' >> "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.unmatched.qcparams.txt"
         done >> $prefix.consolidate.processed.files.sh
 
         # Ref - Sumstats - Direct Match
-        echo "1-UID 2-UIDref 3-SNP 4-A1 5-A2 6-F1 7-F2 8-Status 9-UID 10-SNP 11-CHR 12-BP 13-A1 14-A2 15-FRQ 16-INFO 17-BETA 18-SE 19-P 20-NSample 21-Z 22-AFdiff 23-AT_CG 24-AF_qc 25-INFOSc_qc 26-AFB_qc 27-AMB_qc" > "$sumstats_1".qc.input."$pop".sumstats.ref.5.match.qcparams.txt
+        echo "1-UID 2-UIDref 3-SNP 4-A1 5-A2 6-F1 7-F2 8-Status 9-SNP 10-CHR 11-BP 12-A1 13-A2 14-FRQ 15-INFO 16-BETA 17-SE 18-P 19-NSample 20-Z 21-AFdiff 22-AT_CG 23-AF_qc 24-INFOSc_qc 25-AFB_qc 26-AMB_qc" > "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.match.qcparams.txt
 
         for i in {1..22}
             do 
-            echo "cat "$sumstats_1".qc.input."$pop".sumstats.ref.5.match.qcparams.chr"$i" | sed '1,1d' >> "$sumstats_1".qc.input."$pop".sumstats.ref.5.match.qcparams.txt" 
+            echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.match.qcparams.chr"$i" | sed '1,1d' >> "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.match.qcparams.txt" 
         done >> $prefix.consolidate.processed.files.sh
 
         # Ref - Sumstat - Allele Flip 
-        echo "1-UID 2-UIDref 3-SNP 4-A1 5-A2 6-F1 7-F2 8-Status 9-UID 10-SNP 11-CHR 12-BP 13-A1 14-A2 15-FRQ 16-INFO 17-BETA 18-SE 19-P 20-NSample 21-Z 22-AFdiff 23-AT_CG 24-AF_qc 25-INFOSc_qc 26-AFB_qc 27-AMB_qc" > "$sumstats_1".qc.input."$pop".sumstats.ref.5.flip.qcparams.txt
+        echo "1-UID 2-UIDref 3-SNP 4-A1 5-A2 6-F1 7-F2 8-Status 9-SNP 10-CHR 11-BP 12-A1 13-A2 14-FRQ 15-INFO 16-BETA 17-SE 18-P 19-NSample 20-Z 21-AFdiff 22-AT_CG 23-AF_qc 24-INFOSc_qc 25-AFB_qc 26-AMB_qc" > "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.flip.qcparams.txt
         
         for i in {1..22}
             do 
-            echo "cat "$sumstats_1".qc.input."$pop".sumstats.ref.5.flip.qcparams.chr"$i" | sed '1,1d' >> "$sumstats_1".qc.input."$pop".sumstats.ref.5.flip.qcparams.txt" 
+            echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.flip.qcparams.chr"$i" | sed '1,1d' >> "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.flip.qcparams.txt" 
         done >> $prefix.consolidate.processed.files.sh
 
         # Ref - Sumstats - altstrand
-        echo "1-UID 2-UIDref 3-SNP 4-A1 5-A2 6-F1 7-F2 8-Status 9-UID 10-SNP 11-CHR 12-BP 13-A1 14-A2 15-FRQ 16-INFO 17-BETA 18-SE 19-P 20-NSample 21-Z 22-AFdiff 23-AT_CG 24-AF_qc 25-INFOSc_qc 26-AFB_qc 27-AMB_qc"  > "$sumstats_1".qc.input."$pop".sumstats.ref.5.altstrand.qcparams.txt
+        echo "1-UID 2-UIDref 3-SNP 4-A1 5-A2 6-F1 7-F2 8-Status 9-SNP 10-CHR 11-BP 12-A1 13-A2 14-FRQ 15-INFO 16-BETA 17-SE 18-P 19-NSample 20-Z 21-AFdiff 22-AT_CG 23-AF_qc 24-INFOSc_qc 25-AFB_qc 26-AMB_qc"  > "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.altstrand.qcparams.txt
         
         for i in {1..22}
             do 
-            echo "cat "$sumstats_1".qc.input."$pop".sumstats.ref.5.altstrand.qcparams.chr"$i" | sed '1,1d' >> "$sumstats_1".qc.input."$pop".sumstats.ref.5.altstrand.qcparams.txt" 
+            echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.altstrand.qcparams.chr"$i" | sed '1,1d' >> "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.altstrand.qcparams.txt" 
         done >> $prefix.consolidate.processed.files.sh
 
         # Ref - Sumstats - altstrandflip
-        echo "1-UID 2-UIDref 3-SNP 4-A1 5-A2 6-F1 7-F2 8-Status 9-UID 10-SNP 11-CHR 12-BP 13-A1 14-A2 15-FRQ 16-INFO 17-BETA 18-SE 19-P 20-NSample 21-Z 22-AFdiff 23-AT_CG 24-AF_qc 25-INFOSc_qc 26-AFB_qc 27-AMB_qc"  > "$sumstats_1".qc.input."$pop".sumstats.ref.5.altstrandflp.qcparams.txt
+        echo "1-UID 2-UIDref 3-SNP 4-A1 5-A2 6-F1 7-F2 8-Status 9-SNP 10-CHR 11-BP 12-A1 13-A2 14-FRQ 15-INFO 16-BETA 17-SE 18-P 19-NSample 20-Z 21-AFdiff 22-AT_CG 23-AF_qc 24-INFOSc_qc 25-AFB_qc 26-AMB_qc"  > "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.altstrandflp.qcparams.txt
         
         for i in {1..22}
             do 
-            echo "cat "$sumstats_1".qc.input."$pop".sumstats.ref.5.altstrandflp.qcparams.chr"$i" | sed '1,1d' >> "$sumstats_1".qc.input."$pop".sumstats.ref.5.altstrandflp.qcparams.txt" 
+            echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.altstrandflp.qcparams.chr"$i" | sed '1,1d' >> "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.altstrandflp.qcparams.txt" 
         done >> $prefix.consolidate.processed.files.sh
 
     else
@@ -270,18 +272,18 @@
     # Filter using grep -v fail
     # [Binary]
         # Note after QC apply headers would be as follows
-        # 1-UID 2-UIDref 3-SNP 4-A1 5-A2 6-F1 7-F2 8-Status 9-UID 10-SNP 11-CHR 12-BP 13-A1 14-A2 15-FRQ 16-INFO 17-OR 18-SE 19-P 20-Nca 21-Nco 22-Z 23-AFdiff 24-AT_CG 25-AF_qc 26-INFOSc_qc 27-AFB_qc 28-AMB_qc [Binary Trait]
+        # 1-UID 2-UIDref 3-SNP 4-A1 5-A2 6-F1 7-F2 8-Status 9-SNP 10-CHR 11-BP 12-A1 13-A2 14-FRQ 15-INFO 16-OR 17-SE 18-P 19-Nca 20-Nco 21-Z 22-AFdiff 23-AT_CG 24-AF_qc 25-INFOSc_qc 26-AFB_qc 27-AMB_qc [Binary Trait]
 
     # >>> NEW cols <<<
 
-    # 2-UID0 1-UID1 11-CHR:12-BP:4-A1:5-A2(UID2) 3-SNPref 10-SNP 11-CHR 12-BP 4-A1 5-A2 6-F1ref 15-FRQ 8-Status 16-INFO 17-OR 18-SE 19-P 20-Nca 21-Nco 22-Z 23-minuslog10P
+        # 2-UID0 1-UID1 10-CHR:11-BP:4-A1:5-A2(UID2) 3-SNPref 9-SNP 10-CHR 11-BP 4-A1 5-A2 6-F1ref 14-FRQ 8-Status 15-INFO 16-OR 17-SE 18-P 19-Nca 20-Nco 21-Z 22-minuslog10P
     
     # [Quantitative]
-        # 1-UID 2-UIDref 3-SNP 4-A1 5-A2 6-F1 7-F2 8-Status 9-UID 10-SNP 11-CHR 12-BP 13-A1 14-A2 15-FRQ 16-INFO 17-OR 18-SE 19-P 20-N_qt 21-Z 22-AFdiff 23-AT_CG 24-AF_qc 25-INFOSc_qc 26-AFB_qc 27-AMB_qc [Quantitative Trait]
+        # 1-UID 2-UIDref 3-SNP 4-A1 5-A2 6-F1 7-F2 8-Status 9-SNP 10-CHR 11-BP 12-A1 13-A2 14-FRQ 15-INFO 16-BETA 17-SE 18-P 19-NSample 20-Z 21-AFdiff 22-AT_CG 23-AF_qc 24-INFOSc_qc 25-AFB_qc 26-AMB_qc [Quantitative Trait]
 
     # >>> NEW cols <<<
 
-    # 2-UID0 1-UID1 11-CHR:12-BP:4-A1:5-A2(UID2) 3-SNPref 10-SNP 11-CHR 12-BP 4-A1 5-A2 6-F1ref 15-FRQ 8-Status 16-INFO 17-OR 18-SE 19-P 20-NSample 21-Z 22-minuslog10P
+        # 2-UID0 1-UID1 10-CHR:11-BP:4-A1:5-A2(UID2) 3-SNPref 9-SNP 10-CHR 11-BP 4-A1 5-A2 6-F1ref 14-FRQ 8-Status 15-INFO 16-BETA 17-SE 18-P 19-NSample 20-Z 21-minuslog10P
 
     if [ "$qt" == "Binary" ]; then 
 
@@ -289,20 +291,20 @@
         echo "UID0 UID1 UID2 SNPref SNP CHR BP A1 A2 F1ref FRQ QCStatus INFO OR SE P Nca Nco Z minuslog10P" > $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results.txt
 
         # match 
-        echo "cat "$sumstats_1".qc.input."$pop".sumstats.ref.5.match.qcparams.txt | sed '1,1d' | grep -v fail | awk '{if(\$15 < 0.50) print \$2, \$1,(\$11\":\"\$12\":\"\$4\":\"\$5), \$3,\$10,\$11,\$12,\$4,\$5,\$6,\$15,\$8,\$16,\$17,\$18,\$19,\$20,\$21,\$22,(-1*log(\$19)/log(10)); else if(\$15 > 0.50) print \$2, \$1,(\$11\":\"\$12\":\"\$5\":\"\$4),\$3,\$10,\$11,\$12,\$5,\$4,(1-\$6),(1-\$15),\$8,\$16,(-1*\$17),\$18,\$19,\$20,\$21,(-1*\$22),(-1*log(\$19)/log(10))}' >> $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results.txt" > $prefix.merge.sumstatsqc.out.sh
+        echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.match.qcparams.txt | sed '1,1d' | grep -v fail | awk '{if(\$14 < 0.50) print \$2, \$1,(\$10\":\"\$11\":\"\$4\":\"\$5), \$3,\$9,\$10,\$11,\$4,\$5,\$6,\$14,\$8,\$15,\$16,\$17,\$18,\$19,\$20,\$21,(-1*log(\$18)/log(10)); else if(\$14 > 0.50) print \$2, \$1,(\$10\":\"\$11\":\"\$5\":\"\$4),\$3,\$9,\$10,\$11,\$5,\$4,(1-\$6),(1-\$14),\$8,\$15,(-1*\$16),\$17,\$18,\$19,\$20,(-1*\$21),(-1*log(\$18)/log(10))}' >> $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results.txt" > $prefix.merge.sumstatsqc.out.sh
 
         # flip 
-        echo "cat "$sumstats_1".qc.input."$pop".sumstats.ref.5.flip.qcparams.txt | sed '1,1d' | grep -v fail | awk '{if(\$15 < 0.50) print \$2, \$1,(\$11\":\"\$12\":\"\$4\":\"\$5), \$3,\$10,\$11,\$12,\$4,\$5,\$6,\$15,\$8,\$16,\$17,\$18,\$19,\$20,\$21,\$22,(-1*log(\$19)/log(10)); else if(\$15 > 0.50) print \$2, \$1,(\$11\":\"\$12\":\"\$5\":\"\$4),\$3,\$10,\$11,\$12,\$5,\$4,(1-\$6),(1-\$15),\$8,\$16,(-1*\$17),\$18,\$19,\$20,\$21, (-1*\$22),(-1*log(\$19)/log(10))}' >> $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results.txt" >> $prefix.merge.sumstatsqc.out.sh
+        echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.flip.qcparams.txt | sed '1,1d' | grep -v fail | awk '{if(\$14 < 0.50) print \$2, \$1,(\$10\":\"\$11\":\"\$4\":\"\$5), \$3,\$9,\$10,\$11,\$4,\$5,\$6,\$14,\$8,\$15,\$16,\$17,\$18,\$19,\$20,\$21,(-1*log(\$18)/log(10)); else if(\$14 > 0.50) print \$2, \$1,(\$10\":\"\$11\":\"\$5\":\"\$4),\$3,\$9,\$10,\$11,\$5,\$4,(1-\$6),(1-\$14),\$8,\$15,(-1*\$16),\$17,\$18,\$19,\$20, (-1*\$21),(-1*log(\$18)/log(10))}' >> $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results.txt" >> $prefix.merge.sumstatsqc.out.sh
 
         # altstrand 
-        echo "cat "$sumstats_1".qc.input."$pop".sumstats.ref.5.altstrand.qcparams.txt | sed '1,1d' | grep -v fail | awk '{if(\$15 < 0.50) print \$2, \$1,(\$11\":\"\$12\":\"\$4\":\"\$5), \$3,\$10,\$11,\$12,\$4,\$5,\$6,\$15,\$8,\$16,\$17,\$18,\$19,\$20,\$21,\$22,(-1*log(\$19)/log(10)); else if(\$15 > 0.50) print \$2, \$1,(\$11\":\"\$12\":\"\$5\":\"\$4),\$3,\$10,\$11,\$12,\$5,\$4,(1-\$6),(1-\$15),\$8,\$16,(-1*\$17),\$18,\$19,\$20,\$21,(-1*\$22),(-1*log(\$19)/log(10))}' >> $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results.txt" >> $prefix.merge.sumstatsqc.out.sh
+        echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.altstrand.qcparams.txt | sed '1,1d' | grep -v fail | awk '{if(\$14 < 0.50) print \$2, \$1,(\$10\":\"\$11\":\"\$4\":\"\$5), \$3,\$9,\$10,\$11,\$4,\$5,\$6,\$14,\$8,\$15,\$16,\$17,\$18,\$19,\$20,\$21,(-1*log(\$18)/log(10)); else if(\$14 > 0.50) print \$2, \$1,(\$10\":\"\$11\":\"\$5\":\"\$4),\$3,\$9,\$10,\$11,\$5,\$4,(1-\$6),(1-\$14),\$8,\$15,(-1*\$16),\$17,\$18,\$19,\$20,(-1*\$21),(-1*log(\$18)/log(10))}' >> $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results.txt" >> $prefix.merge.sumstatsqc.out.sh
 
         # altstrandflp
-        echo "cat "$sumstats_1".qc.input."$pop".sumstats.ref.5.altstrandflp.qcparams.txt | sed '1,1d' | grep -v fail | awk '{if(\$15 < 0.50) print \$2, \$1,(\$11\":\"\$12\":\"\$4\":\"\$5), \$3,\$10,\$11,\$12,\$4,\$5,\$6,\$15,\$8,\$16,\$17,\$18,\$19,\$20,\$21,\$22,(-1*log(\$19)/log(10)); else if(\$15 > 0.50) print \$2, \$1,(\$11\":\"\$12\":\"\$5\":\"\$4),\$3,\$10,\$11,\$12,\$5,\$4,(1-\$6),(1-\$15),\$8,\$16,(-1*\$17),\$18,\$19,\$20,\$21,(-1*\$22),(-1*log(\$19)/log(10))}' >> $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results.txt" >> $prefix.merge.sumstatsqc.out.sh
+        echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.altstrandflp.qcparams.txt | sed '1,1d' | grep -v fail | awk '{if(\$14 < 0.50) print \$2, \$1,(\$10\":\"\$11\":\"\$4\":\"\$5), \$3,\$9,\$10,\$11,\$4,\$5,\$6,\$14,\$8,\$15,\$16,\$17,\$18,\$19,\$20,\$21,(-1*log(\$18)/log(10)); else if(\$14 > 0.50) print \$2, \$1,(\$10\":\"\$11\":\"\$5\":\"\$4),\$3,\$9,\$10,\$11,\$5,\$4,(1-\$6),(1-\$14),\$8,\$15,(-1*\$16),\$17,\$18,\$19,\$20,(-1*\$21),(-1*log(\$18)/log(10))}' >> $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results.txt" >> $prefix.merge.sumstatsqc.out.sh
 
         # sort by CHR BP finalqc
 
-        echo "cat $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results.txt | grep -v NA | grep -v na | grep -v Inf | grep -v inf | sed '1,1d' | sort -k 6 -g -k 7 -g | sed '1 i\UID0 UID1 UID2 SNPref SNP CHR BP A1 A2 F1ref FRQ QCStatus INFO OR SE P Nca Nco Z minuslog10P' > $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results.finalqc.txt" > $prefix.sort.sumstatsqc.out.sh
+        echo "cat $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results.txt | awk '{if(\$1==\$2) print \$1,\$2,\$2,\$4,\$5,\$6,\$7,\$9,\$8,(1-\$10),(1-\$11),\$12,\$13,(-1*\$14),\$15,\$16,\$17,\$18,(-1*\$19),\$20; else if(\$2==\$3) print \$1,\$2,\$1,\$4,\$5,\$6,\$7,\$9,\$8,(1-\$10),(1-\$11),\$12,\$13,(-1*\$14),\$15,\$16,\$17,\$18,(-1*\$19),\$20; else print \$0}' | grep -v NA | grep -v na | grep -v Inf | grep -v inf | sed '1,1d' | sort -k 6 -g -k 7 -g | sed '1 i\UID0 UID1 UID2 SNPref SNP CHR BP A1 A2 F1ref FRQ QCStatus INFO OR SE P Nca Nco Z minuslog10P' > $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results.finalqc.txt" > $prefix.sort.sumstatsqc.out.sh
 
     elif [ "$qt" == "Quantitative" ]; then
 
@@ -310,20 +312,22 @@
         echo "UID0 UID1 UID2 SNPref SNP CHR BP A1 A2 F1ref FRQ QCStatus INFO BETA SE P NSample Z minuslog10P" > $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results.txt
 
         # match 
-        echo "cat "$sumstats_1".qc.input."$pop".sumstats.ref.5.match.qcparams.txt | sed '1,1d' | grep -v fail | awk '{if(\$15 < 0.50) print \$2, \$1,(\$11\":\"\$12\":\"\$4\":\"\$5), \$3,\$10,\$11,\$12,\$4,\$5,\$6,\$15,\$8,\$16,\$17,\$18,\$19,\$20,\$21,(-1*log(\$19)/log(10)); else if(\$15 > 0.50) print \$2, \$1,(\$11\":\"\$12\":\"\$5\":\"\$4),\$3,\$10,\$11,\$12,\$5,\$4,(1-\$6),(1-\$15),\$8,\$16,(-1*\$17),\$18,\$19,\$20,(-1*\$21),(-1*log(\$19)/log(10))}' >> $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results.txt" > $prefix.merge.sumstatsqc.out.sh
+        echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.match.qcparams.txt | sed '1,1d' | grep -v fail | awk '{if(\$14 < 0.50) print \$2, \$1,(\$10\":\"\$11\":\"\$4\":\"\$5), \$3,\$9,\$10,\$11,\$4,\$5,\$6,\$14,\$8,\$15,\$16,\$17,\$18,\$19,\$20,(-1*log(\$18)/log(10)); else if(\$14 > 0.50) print \$2, \$1,(\$10\":\"\$11\":\"\$5\":\"\$4),\$3,\$9,\$10,\$11,\$5,\$4,(1-\$6),(1-\$14),\$8,\$15,(-1*\$16),\$17,\$18,\$19,(-1*\$20),(-1*log(\$18)/log(10))}' >> $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results.txt" > $prefix.merge.sumstatsqc.out.sh
 
         # flip 
-        echo "cat "$sumstats_1".qc.input."$pop".sumstats.ref.5.flip.qcparams.txt | sed '1,1d' | grep -v fail | awk '{if(\$15 < 0.50) print \$2, \$1,(\$11\":\"\$12\":\"\$4\":\"\$5), \$3,\$10,\$11,\$12,\$4,\$5,\$6,\$15,\$8,\$16,\$17,\$18,\$19,\$20,\$21,(-1*log(\$19)/log(10)); else if(\$15 > 0.50) print \$2, \$1,(\$11\":\"\$12\":\"\$5\":\"\$4),\$3,\$10,\$11,\$12,\$5,\$4,(1-\$6),(1-\$15),\$8,\$16,(-1*\$17),\$18,\$19,\$20,(-1*\$21),(-1*log(\$19)/log(10))}' >> $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results.txt" >> $prefix.merge.sumstatsqc.out.sh
+        echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.flip.qcparams.txt | sed '1,1d' | grep -v fail | awk '{if(\$14 < 0.50) print \$2, \$1,(\$10\":\"\$11\":\"\$4\":\"\$5), \$3,\$9,\$10,\$11,\$4,\$5,\$6,\$14,\$8,\$15,\$16,\$17,\$18,\$19,\$20,(-1*log(\$18)/log(10)); else if(\$14 > 0.50) print \$2, \$1,(\$10\":\"\$11\":\"\$5\":\"\$4),\$3,\$9,\$10,\$11,\$5,\$4,(1-\$6),(1-\$14),\$8,\$15,(-1*\$16),\$17,\$18,\$19,(-1*\$20),(-1*log(\$18)/log(10))}' >> $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results.txt" >> $prefix.merge.sumstatsqc.out.sh
 
         # altstrand 
-        echo "cat "$sumstats_1".qc.input."$pop".sumstats.ref.5.altstrand.qcparams.txt | sed '1,1d' | grep -v fail | awk '{if(\$15 < 0.50) print \$2, \$1,(\$11\":\"\$12\":\"\$4\":\"\$5), \$3,\$10,\$11,\$12,\$4,\$5,\$6,\$15,\$8,\$16,\$17,\$18,\$19,\$20,\$21,(-1*log(\$19)/log(10)); else if(\$15 > 0.50) print \$2, \$1,(\$11\":\"\$12\":\"\$5\":\"\$4),\$3,\$10,\$11,\$12,\$5,\$4,(1-\$6),(1-\$15),\$8,\$16,(-1*\$17),\$18,\$19,\$20,(-1*\$21),(-1*log(\$19)/log(10))}' >> $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results.txt" >> $prefix.merge.sumstatsqc.out.sh
+        echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.altstrand.qcparams.txt | sed '1,1d' | grep -v fail | awk '{if(\$14 < 0.50) print \$2, \$1,(\$10\":\"\$11\":\"\$4\":\"\$5), \$3,\$9,\$10,\$11,\$4,\$5,\$6,\$14,\$8,\$15,\$16,\$17,\$18,\$19,\$20,(-1*log(\$18)/log(10)); else if(\$14 > 0.50) print \$2, \$1,(\$10\":\"\$11\":\"\$5\":\"\$4),\$3,\$9,\$10,\$11,\$5,\$4,(1-\$6),(1-\$14),\$8,\$15,(-1*\$16),\$17,\$18,\$19,(-1*\$20),(-1*log(\$18)/log(10))}' >> $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results.txt" >> $prefix.merge.sumstatsqc.out.sh
 
         # altstrandflp
-        echo "cat "$sumstats_1".qc.input."$pop".sumstats.ref.5.altstrandflp.qcparams.txt | sed '1,1d' | grep -v fail | awk '{if(\$15 < 0.50) print \$2, \$1,(\$11\":\"\$12\":\"\$4\":\"\$5), \$3,\$10,\$11,\$12,\$4,\$5,\$6,\$15,\$8,\$16,\$17,\$18,\$19,\$20,\$21,(-1*log(\$19)/log(10)); else if(\$15 > 0.50) print \$2, \$1,(\$11\":\"\$12\":\"\$5\":\"\$4),\$3,\$10,\$11,\$12,\$5,\$4,(1-\$6),(1-\$15),\$8,\$16,(-1*\$17),\$18,\$19,\$20,(-1*\$21),(-1*log(\$19)/log(10))}' >> $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results.txt" >> $prefix.merge.sumstatsqc.out.sh
+        echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.altstrandflp.qcparams.txt | sed '1,1d' | grep -v fail | awk '{if(\$14 < 0.50) print \$2, \$1,(\$10\":\"\$11\":\"\$4\":\"\$5), \$3,\$9,\$10,\$11,\$4,\$5,\$6,\$14,\$8,\$15,\$16,\$17,\$18,\$19,\$20,(-1*log(\$18)/log(10)); else if(\$14 > 0.50) print \$2, \$1,(\$10\":\"\$11\":\"\$5\":\"\$4),\$3,\$9,\$10,\$11,\$5,\$4,(1-\$6),(1-\$14),\$8,\$15,(-1*\$16),\$17,\$18,\$19,(-1*\$20),(-1*log(\$18)/log(10))}' >> $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results.txt" >> $prefix.merge.sumstatsqc.out.sh
 
         # sort by CHR BP 
 
-        echo "cat $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results.txt | grep -v NA | grep -v na | grep -v Inf | grep -v inf | sed '1,1d' | sort -k 6 -g -k 7 -g | sed '1 i\UID0 UID1 UID2 SNPref SNP CHR BP A1 A2 F1ref FRQ QCStatus INFO BETA SE P NSample Z minuslog10P' > $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results.finalqc.txt" > $prefix.sort.sumstatsqc.out.sh
+        #echo "cat $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results.txt | grep -v NA | grep -v na | grep -v Inf | grep -v inf | sed '1,1d' | sort -k 6 -g -k 7 -g | sed '1 i\UID0 UID1 UID2 SNPref SNP CHR BP A1 A2 F1ref FRQ QCStatus INFO BETA SE P NSample Z minuslog10P' > $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results.finalqc.txt" > $prefix.sort.sumstatsqc.out.sh
+
+        echo "cat $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results.txt | awk '{if(\$1==\$2) print \$1,\$2,\$2,\$4,\$5,\$6,\$7,\$9,\$8,(1-\$10),(1-\$11),\$12,\$13,(-1*\$14),\$15,\$16,\$17,(-1*\$18),\$19; else if(\$2==\$3) print \$1,\$2,\$1,\$4,\$5,\$6,\$7,\$9,\$8,(1-\$10),(1-\$11),\$12,\$13,(-1*\$14),\$15,\$16,\$17,(-1*\$18),\$19; else print \$0}' | grep -v NA | grep -v na | grep -v Inf | grep -v inf | sed '1,1d' | sort -k 6 -g -k 7 -g | sed '1 i\UID0 UID1 UID2 SNPref SNP CHR BP A1 A2 F1ref FRQ QCStatus INFO BETA SE P NSample Z minuslog10P' > $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results.finalqc.txt" > $prefix.sort.sumstatsqc.out.sh
 
     
     else
@@ -349,7 +353,7 @@
 
     for i in {1..22}
         do
-        echo "cat $sumstats_1.qc.input.$pop.sumstats.5.non-qc-ed.txt | awk '{if(\$3=="$i") print \$1}' > $prefix.nonqc.vars.chr"$i"" 
+        echo "cat $sumstats_1.qc.input.$pop.$prefix.sumstats.5.non-qc-ed.txt | awk '{if(\$3=="$i") print \$1}' > $prefix.nonqc.vars.chr"$i"" 
     done > $prefix.variants.nonqc.sh
     
     for i in {1..22}
@@ -371,20 +375,20 @@
 
     # characterize failed variants
     # Extract unmatched, failed vars for each categories
-        echo "cat "$sumstats_1".qc.input."$pop".sumstats.ref.5.unmatched.qcparams.txt | sed '1,1d' | awk '{print \$1, \$11}' | sed '1 i\UID Punmatched' > $prefix.unmatched.vars.qcexclude.txt" > $prefix.extract.failed.vars.sh
+        echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.unmatched.qcparams.txt | sed '1,1d' | awk '{print \$1, \$11}' | sed '1 i\UID Punmatched' > $prefix.unmatched.vars.qcexclude.txt" > $prefix.extract.failed.vars.sh
 
     if [ "$qt" == "Binary" ]; then    
-        echo "cat "$sumstats_1".qc.input."$pop".sumstats.ref.5.match.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$1, \$19, \$25, \$26, \$27, \$28}' | sed '1 i\UID Pmatch AFmatch INFOmatch AFBmatch AMBmatch' > $prefix.matched.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
-        echo "cat "$sumstats_1".qc.input."$pop".sumstats.ref.5.flip.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$1, \$19, \$25, \$26, \$27, \$28}' | sed '1 i\UID Pflip AFflip INFOflip AFBflip AMBflip' > $prefix.flip.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
-        echo "cat "$sumstats_1".qc.input."$pop".sumstats.ref.5.altstrand.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$1, \$19, \$25, \$26, \$27, \$28}' | sed '1 i\UID Pstrand AFstrand INFOstrand AFBstrand AMBstrand' > $prefix.altstrand.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
-        echo "cat "$sumstats_1".qc.input."$pop".sumstats.ref.5.altstrandflp.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$1, \$19, \$25, \$26, \$27, \$28}' | sed '1 i\UID Pstrandflp AFstrandflp INFOstrandflp AFBstrandflp AMBstrandflp' > $prefix.altstrandflp.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
+        echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.match.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$1, \$18, \$24, \$25, \$26, \$27}' | sed '1 i\UID Pmatch AFmatch INFOmatch AFBmatch AMBmatch' > $prefix.matched.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
+        echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.flip.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$1, \$18, \$24, \$25, \$26, \$27}' | sed '1 i\UID Pflip AFflip INFOflip AFBflip AMBflip' > $prefix.flip.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
+        echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.altstrand.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$1, \$18, \$24, \$25, \$26, \$27}' | sed '1 i\UID Pstrand AFstrand INFOstrand AFBstrand AMBstrand' > $prefix.altstrand.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
+        echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.altstrandflp.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$1, \$18, \$24, \$25, \$26, \$27}' | sed '1 i\UID Pstrandflp AFstrandflp INFOstrandflp AFBstrandflp AMBstrandflp' > $prefix.altstrandflp.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
     fi
 
     if [ "$qt" == "Quantitative" ]; then
-        echo "cat "$sumstats_1".qc.input."$pop".sumstats.ref.5.match.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$1, \$19, \$24, \$25, \$26, \$27}' | sed '1 i\UID Pmatch AFmatch INFOmatch AFBmatch AMBmatch' > $prefix.matched.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
-        echo "cat "$sumstats_1".qc.input."$pop".sumstats.ref.5.flip.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$1, \$19, \$24, \$25, \$26, \$27}' | sed '1 i\UID Pflip AFflip INFOflip AFBflip AMBflip' > $prefix.flip.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
-        echo "cat "$sumstats_1".qc.input."$pop".sumstats.ref.5.altstrand.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$1, \$19, \$24, \$25, \$26, \$27}' | sed '1 i\UID Pstrand AFstrand INFOstrand AFBstrand AMBstrand' > $prefix.altstrand.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
-        echo "cat "$sumstats_1".qc.input."$pop".sumstats.ref.5.altstrandflp.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$1, \$19, \$24, \$25, \$26, \$27}' | sed '1 i\UID Pstrandflp AFstrandflp INFOstrandflp AFBstrandflp AMBstrandflp' > $prefix.altstrandflp.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
+        echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.match.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$1, \$18, \$23, \$24, \$25, \$26}' | sed '1 i\UID Pmatch AFmatch INFOmatch AFBmatch AMBmatch' > $prefix.matched.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
+        echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.flip.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$1, \$18, \$23, \$24, \$25, \$26}' | sed '1 i\UID Pflip AFflip INFOflip AFBflip AMBflip' > $prefix.flip.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
+        echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.altstrand.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$1, \$18, \$23, \$24, \$25, \$26}' | sed '1 i\UID Pstrand AFstrand INFOstrand AFBstrand AMBstrand' > $prefix.altstrand.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
+        echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.altstrandflp.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$1, \$18, \$23, \$24, \$25, \$26}' | sed '1 i\UID Pstrandflp AFstrandflp INFOstrandflp AFBstrandflp AMBstrandflp' > $prefix.altstrandflp.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
 
     fi
 
@@ -454,11 +458,11 @@ flipex <- fread("/DIRECTORY/FLIPEX")
 strandex <- fread("/DIRECTORY/STRANDEX")
 strandflpex <- fread("/DIRECTORY/STRANDFLPEX")
 
-merge1 <- full_join(exvars, unmex)
-merge2 <- full_join(merge1, matchex)
-merge3 <- full_join(merge2, flipex)
-merge4 <- full_join(merge3, strandex)
-merge5 <- full_join(merge4, strandflpex)
+merge1 <- full_join(exvars, unmex, by = "UID")
+merge2 <- full_join(merge1, matchex, by = "UID")
+merge3 <- full_join(merge2, flipex, by = "UID")
+merge4 <- full_join(merge3, strandex, by = "UID")
+merge5 <- full_join(merge4, strandflpex, by = "UID")
 
 fwrite(merge5, file="/DIRECTORY/OUTEX", quote=FALSE, compress="none", sep=" ", na="NA")
 

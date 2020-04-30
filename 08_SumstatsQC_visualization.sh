@@ -136,7 +136,7 @@
 
 DIRECTORY=$(echo $PWD | sed 's_/_\\/_g')
 FINALQCFILE=$prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results.finalqc.txt
-NONQCFILE="$sumstats_1".qc.input."$pop".sumstats.5.non-qc-ed.txt
+NONQCFILE="$sumstats_1".qc.input."$pop".$prefix.sumstats.5.non-qc-ed.txt
 EXCLUDEDVARS=$prefix.excluded.variants.txt
 PREFIX=$prefix
 
@@ -498,20 +498,23 @@ if(require("qqman")){
 
 ## Read in summary statistics 
 sumstats <- fread("/DIRECTORY/NONQCFILE")
+excluded <- fread("/DIRECTORY/EXCLUDEDVARS")
 
 ## include columns
-gwas <- sumstats %>% select(., SNP=UID, CHR, BP, P)
+gwas <- sumstats %>% select(., UID, CHR, BP, P)
+gwasex <- semi_join(gwas, excluded, by = "UID")
+gwasex <- gwasex %>% select(., SNP=UID, CHR, BP, P)
 
-gwas <- gwas %>% na.omit()
+gwasex <- gwasex %>% na.omit()
 
 ## scanning the snps to highlight
-snps_to_highlight <- scan("/DIRECTORY/EXCLUDEDVARS", character())
+
 
 ## Initialize figure 
 png("/DIRECTORY/PREFIX_SumstatsQC_Manhattanplot_wXvars.png",height=15,width=30,units="cm",res=400,pointsize=3)
 
 
-manhattan(gwas,col=c("lightskyblue2","midnightblue"),suggestiveline=FALSE,cex.axis=0.95,highlight=snps_to_highlight,main='')
+manhattan(gwasex,suggestiveline=FALSE,cex.axis=0.95,main='')
 
 dev.off()
 
@@ -628,11 +631,15 @@ bash $prefix.visualization.sh
 
 # write multicpu code 
     if [ "$multicpu" == "Y" ]; then
-        ls $prefix*.r | awk '{print "R CMD BATCH --no-save", $0, "&"}' > $prefix.visualization.multicpu.sh 
+        ls $prefix.hist*.r | awk '{print "R CMD BATCH --no-save", $0, "&"}' > $prefix.visualization.multicpu.sh 
+        ls $prefix.scat*.r | awk '{print "R CMD BATCH --no-save", $0, "&"}' >> $prefix.visualization.multicpu.sh
+        ls $prefix.manh*.r | awk '{print "R CMD BATCH --no-save", $0, "&"}' >> $prefix.visualization.multicpu.sh 
         chmod +x *.sh
         echo "plotting post-qc visualization"
     else 
-        ls $prefix*.r | awk '{print "R CMD BATCH --no-save", $0}' > $prefix.visualization.singlecpu.sh
+        ls $prefix.hist*.r | awk '{print "R CMD BATCH --no-save", $0}' > $prefix.visualization.singlecpu.sh
+        ls $prefix.scat*.r | awk '{print "R CMD BATCH --no-save", $0}' >> $prefix.visualization.singlecpu.sh
+        ls $prefix.manh*.r | awk '{print "R CMD BATCH --no-save", $0}' >> $prefix.visualization.singlecpu.sh
         chmod +x *.sh
         echo "plotting post-qc visualization"
     fi

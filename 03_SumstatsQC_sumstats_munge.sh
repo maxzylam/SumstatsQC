@@ -133,14 +133,14 @@
         if [ "$qt" == "Binary" ]; then          
                 for i in {1..22}
                         do 
-                        echo "cat "$sumstats_1".qc.input."$pop".sumstats.2 | sed '1,1d' | awk '{if(\$3=="$i") print \$0}' | sed '1 i\UID SNP CHR BP A1 A2 FRQ INFO OR SE P Nca Nco Z' > "$sumstats_1".qc.input."$pop".sumstats.3.chr"$i""
+                        echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.2 | sed '1,1d' | awk '{if(\$3=="$i") print \$0}' | sed '1 i\UID SNP CHR BP A1 A2 FRQ INFO OR SE P Nca Nco Z' > "$sumstats_1".qc.input."$pop".$prefix.sumstats.3.chr"$i""
                 done > $prefix.process_summary_statistics.sh
         fi
 
         if [ "$qt" == "Quantitative" ]; then
                 for i in {1..22}
                         do 
-                        echo "cat "$sumstats_1".qc.input."$pop".sumstats.2 | sed '1,1d' | awk '{if(\$3=="$i") print \$0}' | sed '1 i\UID SNP CHR BP A1 A2 FRQ INFO BETA SE P NSample Z' > "$sumstats_1".qc.input."$pop".sumstats.3.chr"$i""
+                        echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.2 | sed '1,1d' | awk '{if(\$3=="$i") print \$0}' | sed '1 i\UID SNP CHR BP A1 A2 FRQ INFO BETA SE P NSample Z' > "$sumstats_1".qc.input."$pop".$prefix.sumstats.3.chr"$i""
                 done > $prefix.process_summary_statistics.sh
         fi
 

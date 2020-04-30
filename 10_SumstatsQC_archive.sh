@@ -41,5 +41,19 @@
     gsutil cp -r $prefix.SumstatsQC.files $bucket
 
     echo "Folder has been archived"
+    
+    while [ 1 ]; do 
+        read -p "Delete folder (y/n)?" CONT1
+        if [ "$CONT1" == "y" ]; then
+            echo "Deleting ...."
+                rm -r $prefix.SumstatsQC.files
+            break
+        elif [ "$CONT1" == "n" ]; then 
+            echo "abort delete folder ...."
+            exit 1
+        else 
+            echo "respond to y or n ? "
+        fi
+    done
 
-    rm -r $prefix.SumstatsQC.files
+    

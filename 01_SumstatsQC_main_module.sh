@@ -398,20 +398,20 @@
         
             # Re-arrange Binary Trait Summary statistics
 
-            zcat "$sumstats_1".gz | awk -v c1=$SNP -v c2=$CHR -v c3=$BP -v c4=$A1 -v c5=$A2 -v c6=$FRQ -v c7=$INFO -v c8=$OR -v c9=$SE -v c10=$PVAL -v c11=$Nca -v c12=$Nco '{print $c2":"$c3":"$c4":"$c5, $c1,$c2,$c3,$c4,$c5,$c6,$c7,$c8,$c9,$c10,int($c11),int($c12)}' | sed '1,1d' | sed '1 i\UID SNP CHR BP A1 A2 FRQ INFO OR SE P Nca Nco' > "$sumstats_1".qc.input."$pop".sumstats.1
+            zcat "$sumstats_1".gz | awk -v c1=$SNP -v c2=$CHR -v c3=$BP -v c4=$A1 -v c5=$A2 -v c6=$FRQ -v c7=$INFO -v c8=$OR -v c9=$SE -v c10=$PVAL -v c11=$Nca -v c12=$Nco '{print $c2":"$c3":"$c4":"$c5, $c1,$c2,$c3,$c4,$c5,$c6,$c7,$c8,$c9,$c10,int($c11),int($c12)}' | sed '1,1d' | sed '1 i\UID SNP CHR BP A1 A2 FRQ INFO OR SE P Nca Nco' > "$sumstats_1".qc.input."$pop".$prefix.sumstats.1
         
             # Write Variant count for Pre-QC procedures
-            totalsnpspreqc=$(expr $(wc -l "$sumstats_1".qc.input."$pop".sumstats.1 | cut -d ' ' -f1) - 1)
-            echo "There are $totalsnpspreqc SNPs in PreQC Sumstats file "$sumstats_1".qc.input."$pop".sumstats.1" 2>&1 | tee -a $prefix.standardizecol.sumstats_qc.log
+            totalsnpspreqc=$(expr $(wc -l "$sumstats_1".qc.input."$pop".$prefix.sumstats.1 | cut -d ' ' -f1) - 1)
+            echo "There are $totalsnpspreqc SNPs in PreQC Sumstats file "$sumstats_1".qc.input."$pop".$prefix.sumstats.1" 2>&1 | tee -a $prefix.standardizecol.sumstats_qc.log
             echo "" 2>&1 | tee -a $prefix.standardizecol.sumstats_qc.log
 
             # Convert file to linux readable format
 
-            dos2unix "$sumstats_1".qc.input."$pop".sumstats.1
+            dos2unix "$sumstats_1".qc.input."$pop".$prefix.sumstats.1
 
             # Check file
 
-            sumstatsfield=$(cat "$sumstats_1".qc.input."$pop".sumstats.1 | awk 'BEGIN{FS=" "}{if(NF!=13) print;}' | wc | awk '{print $1}')
+            sumstatsfield=$(cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.1 | awk 'BEGIN{FS=" "}{if(NF!=13) print;}' | wc | awk '{print $1}')
 
             if [ "$sumstatsfield" -gt 0 ]; then 
                 echo "case control sumstats does not have 13 fields - check!" 2>&1 | tee -a $prefix.standardizecol.sumstats_qc.log
@@ -425,8 +425,8 @@
             fi
 
             # Extract CASES and CONTROLS count
-            CASES=$(awk '{print $12}' "$sumstats_1".qc.input."$pop".sumstats.1 | sed '1,1d' | sort -r -g | head -1)
-            CONTROLS=$(awk '{print $13}' "$sumstats_1".qc.input."$pop".sumstats.1 | sed '1,1d' | sort -r -g | head -1)
+            CASES=$(awk '{print $12}' "$sumstats_1".qc.input."$pop".$prefix.sumstats.1 | sed '1,1d' | sort -r -g | head -1)
+            CONTROLS=$(awk '{print $13}' "$sumstats_1".qc.input."$pop".$prefix.sumstats.1 | sed '1,1d' | sort -r -g | head -1)
             echo "There are "$CASES" Cases and "$CONTROLS" Controls reported as part of the GWAS sumstats" 2>&1 | tee -a $prefix.standardizecol.sumstats_qc.log
             echo "" 2>&1 | tee -a $prefix.standardizecol.sumstats_qc.log
 
@@ -442,19 +442,19 @@
             echo "" 2>&1 | tee -a $prefix.standardizecol.sumstats_qc.log
         
             # Re-arrange Quantitative Trait Summary statistics 
-            zcat "$sumstats_1".gz | awk -v c1=$SNP -v c2=$CHR -v c3=$BP -v c4=$A1 -v c5=$A2 -v c6=$FRQ -v c7=$INFO -v c8=$OR -v c9=$SE -v c10=$PVAL -v c11=$Nco '{print $c2":"$c3":"$c4":"$c5,$c1,$c2,$c3,$c4,$c5,$c6,$c7,$c8,$c9,$c10,$c11}' | sed '1,1d' | sed '1 i\UID SNP CHR BP A1 A2 FRQ INFO BETA SE P N_qt' > "$sumstats_1".qc.input."$pop".sumstats.1
+            zcat "$sumstats_1".gz | awk -v c1=$SNP -v c2=$CHR -v c3=$BP -v c4=$A1 -v c5=$A2 -v c6=$FRQ -v c7=$INFO -v c8=$OR -v c9=$SE -v c10=$PVAL -v c11=$Nco '{print $c2":"$c3":"$c4":"$c5,$c1,$c2,$c3,$c4,$c5,$c6,$c7,$c8,$c9,$c10,int($c11)}' | sed '1,1d' | sed '1 i\UID SNP CHR BP A1 A2 FRQ INFO BETA SE P N_qt' > "$sumstats_1".qc.input."$pop".$prefix.sumstats.1
 
 
             # Write Variant count for Pre-QC procedures
-            totalsnpspreqc=$(expr $(wc -l "$sumstats_1".qc.input."$pop".sumstats.1 | cut -d ' ' -f1) - 1)
-            echo "There are $totalsnpspreqc SNPs in PreQC Sumstats file "$sumstats_1".qc.input."$pop".sumstats.1" 2>&1 | tee -a $prefix.standardizecol.sumstats_qc.log
+            totalsnpspreqc=$(expr $(wc -l "$sumstats_1".qc.input."$pop".$prefix.sumstats.1 | cut -d ' ' -f1) - 1)
+            echo "There are $totalsnpspreqc SNPs in PreQC Sumstats file "$sumstats_1".qc.input."$pop".$prefix.sumstats.1" 2>&1 | tee -a $prefix.standardizecol.sumstats_qc.log
             echo "" 2>&1 | tee -a $prefix.standardizecol.sumstats_qc.log
         
             # Convert file to linux readable format
-            dos2unix "$sumstats_1".qc.input."$pop".sumstats.1
+            dos2unix "$sumstats_1".qc.input."$pop".$prefix.sumstats.1
     
             # Check file
-            sumstatsfield=$(cat "$sumstats_1".qc.input."$pop".sumstats.1 | awk 'BEGIN{FS=" "}{if(NF!=12) print;}' | wc | awk '{print $1}')
+            sumstatsfield=$(cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.1 | awk 'BEGIN{FS=" "}{if(NF!=12) print;}' | wc | awk '{print $1}')
 
             if [ "$sumstatsfield" -gt 0 ]; then 
                 echo "Quantitative trait sumstats does not have 12 fields - check!" 2>&1 | tee -a $prefix.standardizecol.sumstats_qc.log
@@ -466,7 +466,7 @@
             fi
         
             # Extract SAMPLE count
-            SAMPLE=$(awk '{print $12}' "$sumstats_1".qc.input."$pop".sumstats.1 | sed '1,1d' | sort -r -g | head -1)
+            SAMPLE=$(awk '{print $12}' "$sumstats_1".qc.input."$pop".$prefix.sumstats.1 | sed '1,1d' | sort -r -g | head -1)
             echo "There are "$SAMPLE" samples reported as part of the GWAS sumstats" 2>&1 | tee -a $prefix.standardizecol.sumstats_qc.log
             echo "" 2>&1 | tee -a $prefix.standardizecol.sumstats_qc.log
 
@@ -481,13 +481,13 @@
             echo "Thanks."
             echo "********************************************"
                 helpscript
-            #exit 1
+            exit 1
         fi
 
         # clean up code 
-        standardizationcomplete=$(cat "$sumstats_1".qc.input."$pop".sumstats.1 | wc | awk '{print $1}')
+        standardizationcomplete=$(cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.1 | wc | awk '{print $1}')
 
-        if [ ! -f "$sumstats_1".qc.input."$pop".sumstats.1 ]; then
+        if [ ! -f "$sumstats_1".qc.input."$pop".$prefix.sumstats.1 ]; then
 
             echo "-------------------------------------------------------" 2>&1 | tee -a $prefix.ERROR.log
             echo " WARNING! ERROR - Sumstats Column Standardization Step " 2>&1 | tee -a $prefix.ERROR.log
@@ -542,7 +542,7 @@
         echo "" 2>&1 | tee -a $prefix.zscore.sumstats_qc.log
 
         # Check file 
-        sumstatslogorstatus=$(cat "$sumstats_1".qc.input."$pop".sumstats.1 | awk '{if($9 < 0) print $0}' | wc | awk '{print $1}')
+        sumstatslogorstatus=$(cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.1 | awk '{if($9 < 0) print $0}' | wc | awk '{print $1}')
 
         if [ "$sumstatslogorstatus" == 0 ]; then
             echo "-------------------------------------------------------------------------------" 2>&1 | tee -a $prefix.ERROR.log
@@ -560,27 +560,27 @@
 
         if [ "$qt" == "Binary" ]; then
             echo "library(data.table)" > $prefix.p_to_z_convert.r
-            echo "data <- fread(\""$sumstats_1".qc.input."$pop".sumstats.1\")" >> $prefix.p_to_z_convert.r
+            echo "data <- fread(\""$sumstats_1".qc.input."$pop".$prefix.sumstats.1\")" >> $prefix.p_to_z_convert.r
             echo "data\$P <- as.numeric(data\$P)" >> $prefix.p_to_z_convert.r
             echo "data\$OR <- as.numeric(data\$OR)" >> $prefix.p_to_z_convert.r
             echo "data\$Z<-abs(qnorm(data\$P/2)) * (data\$OR/abs(data\$OR))" >> $prefix.p_to_z_convert.r
-            echo "write.table(data,file=\"$sumstats_1.qc.input.$pop.sumstats.2\",quote=F,row.names=F)" >> $prefix.p_to_z_convert.r
+            echo "fwrite(data,file=\"$sumstats_1.qc.input.$pop.$prefix.sumstats.2\",quote=FALSE,compress=\"none\",na=\"NA\",sep=\" \")" >> $prefix.p_to_z_convert.r
         fi 
 
         if [ "$qt" == "Quantitative" ]; then 
             echo "library(data.table)" > $prefix.p_to_z_convert.r
-            echo "data <- fread(\""$sumstats_1".qc.input."$pop".sumstats.1\")" >> $prefix.p_to_z_convert.r
+            echo "data <- fread(\""$sumstats_1".qc.input."$pop".$prefix.sumstats.1\")" >> $prefix.p_to_z_convert.r
             echo "data\$P <- as.numeric(data\$P)" >> $prefix.p_to_z_convert.r
             echo "data\$BETA <- as.numeric(data\$BETA)" >> $prefix.p_to_z_convert.r
             echo "data\$Z<-abs(qnorm(data\$P/2)) * (data\$BETA/abs(data\$BETA))" >> $prefix.p_to_z_convert.r
-            echo "write.table(data,file=\"$sumstats_1.qc.input.$pop.sumstats.2\",quote=F,row.names=F)" >> $prefix.p_to_z_convert.r
+            echo "fwrite(data,file=\"$sumstats_1.qc.input.$pop.$prefix.sumstats.2\",quote=FALSE,compress=\"none\",na=\"NA\",sep=\" \")" >> $prefix.p_to_z_convert.r
         fi 
 
         # Run Rcode for the calculation 
         R CMD BATCH --no-save $prefix.p_to_z_convert.r
 
         # Clean up R codes 
-        if [ -f $sumstats_1.qc.input.$pop.sumstats.2 ]; then
+        if [ -f $sumstats_1.qc.input.$pop.$prefix.sumstats.2 ]; then
 
             rm $prefix.p_to_z_convert.r
             rm $prefix.p_to_z_convert.r.Rout
@@ -638,11 +638,11 @@
         fi
 
         # clean up code
-        if [ -f "$sumstats_1".qc.input."$pop".sumstats.3.chr22 ]; then
+        if [ -f "$sumstats_1".qc.input."$pop".$prefix.sumstats.3.chr22 ]; then
             rm $prefix.process_summary_statistics_multicpu.sh
             rm $prefix.process_summary_statistics.sh
             touch $prefix.munge.sumstats.done
-            echo "Summary Stats Seperated by Chr~!" 2>&1 | tee -a $prefix.mungestats.sumstats_qc.log
+            echo "Summary Stats Seperated by Chr..." 2>&1 | tee -a $prefix.mungestats.sumstats_qc.log
             echo "" 2>&1 | tee -a $prefix.mungestats.sumstats_qc.log
             cat $prefix.mungestats.sumstats_qc.log >> $prefix.sumstats_qc.log
         else 
@@ -686,7 +686,7 @@
         echo "   04_SumstatsQC_refsumstats_merge.sh --sumstats=$sumstats --pop=$pop --prefix=$prefix --multicpu=$multicpu" 2>&1 | tee -a $prefix.mergeref.sumstats_qc.log
         echo "" 2>&1 | tee -a $prefix.mergeref.sumstats_qc.log
 
-        (source ./04_SumstatsQC_refsumstats_merge.sh --sumstats=$sumstats --pop=$pop --prefix=$prefix --multicpu=$multicpu; wait)
+        (source ./04_SumstatsQC_refsumstats_merge.sh --sumstats=$sumstats --pop=$pop --prefix=$prefix --multicpu=$multicpu --qt=$qt; wait)
 
         # Execute Ref and Sumstats Merge scripts 
         if [ "$multicpu" == "Y" ]; then
@@ -695,10 +695,10 @@
             (source ./$prefix.RefSumstats_merge3_multicpu.sh; wait)
             (source ./$prefix.RefSumstats_merge4_multicpu.sh; wait)
         else
-            (source ./$prefix.RefSumstats_merge1.sh; wait)
-            (source ./$prefix.RefSumstats_merge2.sh; wait)
-            (source ./$prefix.RefSumstats_merge3.sh; wait)
-            (source ./$prefix.RefSumstats_merge4.sh; wait)
+            (source ./$prefix.RefSumstats_merge1_singlecpu.sh; wait)
+            (source ./$prefix.RefSumstats_merge2_singlecpu.sh; wait)
+            (source ./$prefix.RefSumstats_merge3_singlecpu.sh; wait)
+            (source ./$prefix.RefSumstats_merge4_singlecpu.sh; wait)
         fi
 
         # Execute consolidate matched variants
@@ -711,15 +711,15 @@
             (source ./$prefix.consolidate.match.var.uniq.sh; wait) 
 
         # Identify unmatch variants
-        if [ "$multicpu" == "Y" ]; then 
-            (source ./$prefix.reverse.matching_multicpu.sh; wait)
-        else
+        #if [ "$multicpu" == "Y" ]; then 
+        #    (source ./$prefix.reverse.matching_multicpu.sh; wait)
+        #else
             (source ./$prefix.reverse.matching.sh; wait)
-        fi
+        #fi
 
         # clean up code 
 
-        if [ -f "$sumstats_1".qc.input."$pop".sumstats.ref.4.unmatched.chr22 ]; then
+        if [ -f "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.4.unmatched.chr22 ]; then
 
             rm $prefix.RefSumstats_merge*.sh
             rm $prefix.consolidate.matched.var*.sh
@@ -795,7 +795,7 @@
         fi  
 
         # Clean up code
-        if [ -f $sumstats_1.qc.input.$pop.sumstats.ref.5.altstrandflp.qcparams.chr22 ]; then
+        if [ -f $sumstats_1.qc.input.$pop.$prefix.sumstats.ref.5.altstrandflp.qcparams.chr22 ]; then
             rm $prefix.QCapply.match*.sh
             rm $prefix.QCapply.flip*.sh
             rm $prefix.QCapply.altstrand*.sh
@@ -815,7 +815,7 @@
             echo " > Please check if the file names and columnns in    " 2>&1 | tee -a $prefix.ERROR.log
             echo "   the sumstats file is defined appropriately.       " 2>&1 | tee -a $prefix.ERROR.log
             echo "-----------------------------------------------------" 2>&1 | tee -a $prefix.ERROR.log
-            exit 1
+            #exit 1
         fi
     else 
         echo "QC parameters applied to summary statistics previously"
