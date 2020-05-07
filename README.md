@@ -10,6 +10,15 @@ Common variant GWAS have been ubiquitous in identifying underlying biology in nu
 
 The SumstatsQC pipeline is divided into nine modules that is controlled by a main pipeline wrapper - "SumstatsQC". An additional utility module is available for archiving the completed SumstatsQC files into a google drive bucket of Google Drive SDK is set up in the user's system. The pipeline runs primarily in interactive mode, and the user has the option of performing the pipeline in "singlecpu" mode or "multicpu" mode that leverages on multhreaded operations. 
 
+### Dependencies
+
+The pipeline is ran on bash and R. Required dependencies for R 
+- dplyr
+- tidyr
+- ggplot2
+- qqman
+
+
 ### **Wrapper Module**
 
 This is where the main input options pipeline is passed to the wrapper. Using the “--help” flag users would be able to view the options that are available for the SumstatsQC. 
