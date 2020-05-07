@@ -15,6 +15,7 @@ The SumstatsQC pipeline is divided into nine modules that is controlled by a mai
 The pipeline is ran on bash and R. Required dependencies for R 
 - dplyr
 - tidyr
+- data.table
 - ggplot2
 - qqman
 
