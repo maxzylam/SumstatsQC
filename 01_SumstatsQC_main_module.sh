@@ -871,6 +871,14 @@
             (source ./$prefix.extract.failed.vars.sh; wait)
         fi
         
+        #### Note: There is a chance that all variants in the summary statistics matches with reference panel, the $prefix.unmatched.vars.qcexclude.txt file would end up empty. This is likely to create problems in the downstream pipeline. This set of scripts will attempt to mitigate that problem by reading the first 10 rows in the chr1 reference panel for the UID, Punmatched will be indicated as NA. 
+
+        checkqcexcludefile=$(cat $prefix.unmatched.vars.qcexclude.txt | wc | awk '{print $1}')
+
+        if [ "$checkqcexcludefile" -lt 5 ]; then 
+            (source ./$prefix.dummy.unmatched.sh)
+        fi
+
         # Generate Excluded variant report 
 
         (source ./$prefix.make.merge_failed.vars.sh; wait)

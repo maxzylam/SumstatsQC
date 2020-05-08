@@ -304,7 +304,7 @@
 
         # sort by CHR BP finalqc
 
-        echo "cat $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results.txt | awk '{if(\$1==\$2) print \$1,\$2,\$2,\$4,\$5,\$6,\$7,\$9,\$8,(1-\$10),(1-\$11),\$12,\$13,(-1*\$14),\$15,\$16,\$17,\$18,(-1*\$19),\$20; else if(\$2==\$3) print \$1,\$2,\$1,\$4,\$5,\$6,\$7,\$9,\$8,(1-\$10),(1-\$11),\$12,\$13,(-1*\$14),\$15,\$16,\$17,\$18,(-1*\$19),\$20; else print \$0}' | grep -v NA | grep -v na | grep -v Inf | grep -v inf | sed '1,1d' | sort -k 6 -g -k 7 -g | sed '1 i\UID0 UID1 UID2 SNPref SNP CHR BP A1 A2 F1ref FRQ QCStatus INFO OR SE P Nca Nco Z minuslog10P' > $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results.finalqc.txt" > $prefix.sort.sumstatsqc.out.sh
+        echo "cat $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results.txt | awk '{if(\$1!=\$3 && \$1==\$2) print \$1,\$2,\$2,\$4,\$5,\$6,\$7,\$9,\$8,(1-\$10),(1-\$11),\$12,\$13,(-1*\$14),\$15,\$16,\$17,\$18,(-1*\$19),\$20; else if(\$1!=\$3 && \$2==\$3) print \$1,\$2,\$1,\$4,\$5,\$6,\$7,\$9,\$8,(1-\$10),(1-\$11),\$12,\$13,(-1*\$14),\$15,\$16,\$17,\$18,(-1*\$19),\$20; else print \$0}' | grep -v NA | grep -v na | grep -v Inf | grep -v inf | sed '1,1d' | sort -k 6 -g -k 7 -g | sed '1 i\UID0 UID1 UID2 SNPref SNP CHR BP A1 A2 F1ref FRQ QCStatus INFO OR SE P Nca Nco Z minuslog10P' > $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results.finalqc.txt" > $prefix.sort.sumstatsqc.out.sh
 
     elif [ "$qt" == "Quantitative" ]; then
 
@@ -327,7 +327,7 @@
 
         #echo "cat $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results.txt | grep -v NA | grep -v na | grep -v Inf | grep -v inf | sed '1,1d' | sort -k 6 -g -k 7 -g | sed '1 i\UID0 UID1 UID2 SNPref SNP CHR BP A1 A2 F1ref FRQ QCStatus INFO BETA SE P NSample Z minuslog10P' > $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results.finalqc.txt" > $prefix.sort.sumstatsqc.out.sh
 
-        echo "cat $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results.txt | awk '{if(\$1==\$2) print \$1,\$2,\$2,\$4,\$5,\$6,\$7,\$9,\$8,(1-\$10),(1-\$11),\$12,\$13,(-1*\$14),\$15,\$16,\$17,(-1*\$18),\$19; else if(\$2==\$3) print \$1,\$2,\$1,\$4,\$5,\$6,\$7,\$9,\$8,(1-\$10),(1-\$11),\$12,\$13,(-1*\$14),\$15,\$16,\$17,(-1*\$18),\$19; else print \$0}' | grep -v NA | grep -v na | grep -v Inf | grep -v inf | sed '1,1d' | sort -k 6 -g -k 7 -g | sed '1 i\UID0 UID1 UID2 SNPref SNP CHR BP A1 A2 F1ref FRQ QCStatus INFO BETA SE P NSample Z minuslog10P' > $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results.finalqc.txt" > $prefix.sort.sumstatsqc.out.sh
+        echo "cat $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results.txt | awk '{if(\$1!=\$3 && \$1==\$2) print \$1,\$2,\$2,\$4,\$5,\$6,\$7,\$9,\$8,(1-\$10),(1-\$11),\$12,\$13,(-1*\$14),\$15,\$16,\$17,(-1*\$18),\$19; else if(\$1!=\$3 && \$2==\$3) print \$1,\$2,\$1,\$4,\$5,\$6,\$7,\$9,\$8,(1-\$10),(1-\$11),\$12,\$13,(-1*\$14),\$15,\$16,\$17,(-1*\$18),\$19; else print \$0}' | grep -v NA | grep -v na | grep -v Inf | grep -v inf | sed '1,1d' | sort -k 6 -g -k 7 -g | sed '1 i\UID0 UID1 UID2 SNPref SNP CHR BP A1 A2 F1ref FRQ QCStatus INFO BETA SE P NSample Z minuslog10P' > $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results.finalqc.txt" > $prefix.sort.sumstatsqc.out.sh
 
     
     else
@@ -398,6 +398,10 @@
         cat $prefix.extract.failed.vars.sh | awk '{print $0, "&"}' > $prefix.extract.failed.vars.multicpu.sh
     fi 
 
+#### Note: There is a chance that all variants in the summary statistics matches with reference panel, the $prefix.unmatched.vars.qcexclude.txt file would end up empty. This is likely to create problems in the downstream pipeline. This set of scripts will attempt to mitigate that problem by reading the first 10 rows in the chr1 reference panel for the UID, Punmatched will be indicated as NA. 
+
+    echo "zcat $REFFILE.chr1.gz | head -11 | awk '{print \$10\":\"\$11\":\"\$3\":\"\$6, \"NA\"}' | sed '1,1d' | sed '1 i\UID Punmatched' > $prefix.unmatched.vars.qcexclude.txt" > $prefix.dummy.unmatched.sh
+
 ### Merge failed vars files
 
 DIRECTORY=$(echo $PWD | sed 's_/_\\/_g')
@@ -447,7 +451,7 @@ if(require("tidyr")){
     if(require(tidyr)){
         print("tidyr installed and loaded")
     } else {
-        stop("could not install tidy")
+        stop("could not install tidyr")
     }
 }
 
