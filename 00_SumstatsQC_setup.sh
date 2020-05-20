@@ -39,8 +39,8 @@
     read -p "Download SumstatsQC scripts (y/n)?" CONT2
         if [ "$CONT2" == "y" ]; then
             echo "Downloading scripts ...."
-                gsutil cp gs://quality-control-reffiles/WORKING_FOLDER/SumstatsQC $(pwd)
-                gsutil cp gs://quality-control-reffiles/WORKING_FOLDER/*SumstatsQC*sh $(pwd)
+                gsutil cp gs://summary-stats-qc-impute-1/quality-control-reffiles/WORKING_FOLDER/SumstatsQC $(pwd)
+                gsutil cp gs://summary-stats-qc-impute-1/quality-control-reffiles/WORKING_FOLDER/*SumstatsQC*sh $(pwd)
             echo "Make bash script executable ... "
                 dos2unix *.sh
                 chmod +x *.sh

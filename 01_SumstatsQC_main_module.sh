@@ -398,7 +398,7 @@
         
             # Re-arrange Binary Trait Summary statistics
 
-            zcat "$sumstats_1".gz | awk -v c1=$SNP -v c2=$CHR -v c3=$BP -v c4=$A1 -v c5=$A2 -v c6=$FRQ -v c7=$INFO -v c8=$OR -v c9=$SE -v c10=$PVAL -v c11=$Nca -v c12=$Nco '{print $c2":"$c3":"$c4":"$c5, $c1,$c2,$c3,$c4,$c5,$c6,$c7,$c8,$c9,$c10,int($c11),int($c12)}' | sed '1,1d' | sed '1 i\UID SNP CHR BP A1 A2 FRQ INFO OR SE P Nca Nco' > "$sumstats_1".qc.input."$pop".$prefix.sumstats.1
+            zcat "$sumstats_1".gz | awk -v c1=$SNP -v c2=$CHR -v c3=$BP -v c4=$A1 -v c5=$A2 -v c6=$FRQ -v c7=$INFO -v c8=$OR -v c9=$SE -v c10=$PVAL -v c11=$Nca -v c12=$Nco '{print $c2":"$c3":"toupper($c4)":"toupper($c5), $c1,$c2,$c3,toupper($c4),toupper($c5),$c6,$c7,$c8,$c9,$c10,int($c11),int($c12)}' | sed '1,1d' | sed '1 i\UID SNP CHR BP A1 A2 FRQ INFO OR SE P Nca Nco' > "$sumstats_1".qc.input."$pop".$prefix.sumstats.1
         
             # Write Variant count for Pre-QC procedures
             totalsnpspreqc=$(expr $(wc -l "$sumstats_1".qc.input."$pop".$prefix.sumstats.1 | cut -d ' ' -f1) - 1)
@@ -442,7 +442,7 @@
             echo "" 2>&1 | tee -a $prefix.standardizecol.sumstats_qc.log
         
             # Re-arrange Quantitative Trait Summary statistics 
-            zcat "$sumstats_1".gz | awk -v c1=$SNP -v c2=$CHR -v c3=$BP -v c4=$A1 -v c5=$A2 -v c6=$FRQ -v c7=$INFO -v c8=$OR -v c9=$SE -v c10=$PVAL -v c11=$Nco '{print $c2":"$c3":"$c4":"$c5,$c1,$c2,$c3,$c4,$c5,$c6,$c7,$c8,$c9,$c10,int($c11)}' | sed '1,1d' | sed '1 i\UID SNP CHR BP A1 A2 FRQ INFO BETA SE P N_qt' > "$sumstats_1".qc.input."$pop".$prefix.sumstats.1
+            zcat "$sumstats_1".gz | awk -v c1=$SNP -v c2=$CHR -v c3=$BP -v c4=$A1 -v c5=$A2 -v c6=$FRQ -v c7=$INFO -v c8=$OR -v c9=$SE -v c10=$PVAL -v c11=$Nco '{print $c2":"$c3":"toupper($c4)":"toupper($c5),$c1,$c2,$c3,toupper($c4),toupper($c5),$c6,$c7,$c8,$c9,$c10,int($c11)}' | sed '1,1d' | sed '1 i\UID SNP CHR BP A1 A2 FRQ INFO BETA SE P N_qt' > "$sumstats_1".qc.input."$pop".$prefix.sumstats.1
 
 
             # Write Variant count for Pre-QC procedures
@@ -906,6 +906,7 @@
             rm $prefix.make.merge_failed.vars.sh
             rm $prefix.merge_failed.vars.r
             rm $prefix.merge_failed.vars.r.Rout
+            rm $prefix.dummy.unmatched.sh
 
             touch $prefix.post.processing.done
             echo "Post processing step is complete..." 2>&1 | tee -a $prefix.postprc.sumstats_qc.log
