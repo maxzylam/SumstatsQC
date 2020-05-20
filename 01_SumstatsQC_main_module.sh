@@ -101,6 +101,9 @@
                 --multicpu)
                         multicpu=$VALUE
                         ;;
+                --novisual)
+                        novisual=$VALUE
+                        ;;
                 $)
                         echo "ERROR:unknown parameter \ "$PARAM\ ""
                         helpscript
@@ -109,6 +112,16 @@
     done
 
 #####ok########################################################
+
+#####ok########################################################
+#### SKIP VISUALIZATION #######################################
+
+    if [ "$novisual" == "Y" ]; then
+        touch $prefix.visualization.qc.info.done
+        echo "NO VISUALIZATION AVAILABLE - ADDITIONAL INFORMATION FOR VIZ NOT AVAILABLE" > $prefix.visualz.sumstats_qc.log
+    fi
+
+###############################################################
 
 ###############################################################
 #### Write Log File Header Here ###############################
