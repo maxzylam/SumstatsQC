@@ -180,7 +180,7 @@
         for i in {1..22}; do echo "REF <- fread(\"$REFFILE.$prefix.altstrandflp.chr"$i"\")" >> $prefix.refsumstats.altstrandflp.chr"$i".r; done
         for i in {1..22}; do echo "SUMSTATS <- fread(\""$sumstats_1".qc.input."$pop".$prefix.sumstats.3.chr"$i"\")" >> $prefix.refsumstats.altstrandflp.chr"$i".r; done
         for i in {1..22}; do echo "REFSUMSTATS <- inner_join(REF, SUMSTATS, by = \"UID\")" >> $prefix.refsumstats.altstrandflp.chr"$i".r; done
-        for i in {1..22}; do echo "fwrite(REFSUMSTATS, file=\""$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.4.altstrandflp.chr"$i"\", quote=FALSE, na=\"NA\", compress=\"none\", sep=\" \")" >> $prefix.refsumstats.altstrand.chr"$i".r; done
+        for i in {1..22}; do echo "fwrite(REFSUMSTATS, file=\""$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.4.altstrandflp.chr"$i"\", quote=FALSE, na=\"NA\", compress=\"none\", sep=\" \")" >> $prefix.refsumstats.altstrandflp.chr"$i".r; done
 
         #### Execute merge >>>>
         
