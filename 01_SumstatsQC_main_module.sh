@@ -888,7 +888,7 @@
             (source ./$prefix.make.merge_master.vars.sh)
 
         # clean up code
-        if [ -f $prefix.1000G.EAS.ref.SumstatsQC.AF_0.005.INFO_0.3.AFB_0.15.results_mastercopy.txt ]; then 
+        if [ -f T2Dbbj_run4.1000G.EAS.ref.SumstatsQC.AF_0.005.INFO_0.3.AFB_0.15.results_mastercopy.txt ]; then 
             rm $prefix.merge.sumstatsqc.out.sh
             rm $prefix.consolidate.processed.files.sh
             rm $prefix.sort.sumstatsqc.out.sh
