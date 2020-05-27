@@ -136,8 +136,7 @@
 
 DIRECTORY=$(echo $PWD | sed 's_/_\\/_g')
 FINALQCFILE=$prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results.finalqc.txt
-NONQCFILE="$sumstats_1".qc.input."$pop".$prefix.sumstats.5.non-qc-ed.txt
-EXCLUDEDVARS=$prefix.excluded.variants.txt
+MSTFILE=$prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results_mastercopy.txt
 PREFIX=$prefix
 
 ### Check variables 
@@ -497,15 +496,13 @@ if(require("qqman")){
 }
 
 ## Read in summary statistics 
-sumstats <- fread("/DIRECTORY/NONQCFILE")
-excluded <- fread("/DIRECTORY/EXCLUDEDVARS")
+sumstats <- fread("/DIRECTORY/MSTFILE")
+sumstats_ex <- sumstats %>% filter(., PASSqc != "passedqc")
+
 
 ## include columns
-gwas <- sumstats %>% select(., UID, CHR, BP, P)
-gwasex <- semi_join(gwas, excluded, by = "UID")
-gwasex <- gwasex %>% select(., SNP=UID, CHR, BP, P)
-
-gwasex <- gwasex %>% na.omit()
+gwas <- sumstats_ex %>% select(., UID, CHR, BP, P)
+gwasex <- gwas %>% na.omit()
 
 ## scanning the snps to highlight
 
