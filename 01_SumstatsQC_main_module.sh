@@ -636,7 +636,8 @@
         else 
             (source ./$prefix.process_summary_statistics.sh; wait)
         fi
-
+        
+        
         # clean up code
         if [ -f "$sumstats_1".qc.input."$pop".$prefix.sumstats.3.chr22 ]; then
             rm $prefix.process_summary_statistics_multicpu.sh
@@ -710,11 +711,21 @@
         # Sort unique variants and then split them up by chr
             (source ./$prefix.consolidate.match.var.uniq.sh; wait) 
 
+            autosomalchr=$(wc $sumstats_1.qc.input.$pop.$prefix.sumstats.3.chr* | tail -1 | awk '{print $1-22}') 
+            echo "There are $autosomalchr variants from the $prefix sumstats that are autosomal;" 2>&1 | tee -a $prefix.mergeref.sumstats_qc.log
+            echo "" 2>&1 | tee -a $prefix.mergeref.sumstats_qc.log
+            matchsuccess=$(cat $prefix.matched.variants.uniq.txt | sed '1,1d' | wc | awk '{print $1}')
+            echo "There are $matchsuccess variants from the $prefix sumstats that matched with the reference panel;" 2>&1 | tee -a $prefix.mergeref.sumstats_qc.log
+            echo "" 2>&1 | tee -a $prefix.mergeref.sumstats_qc.log
         # Identify unmatch variants
         #if [ "$multicpu" == "Y" ]; then 
         #    (source ./$prefix.reverse.matching_multicpu.sh; wait)
         #else
             (source ./$prefix.reverse.matching.sh; wait)
+           
+            matchfail=$(wc $sumstats_1.qc.input.$pop.$prefix.sumstats.ref.4.unmatched.chr* | tail -1 | awk '{print $1-22}')  
+            echo "There are $matchfail variants from the $prefix sumstats that DID NOT match with the reference panel;" 2>&1 | tee -a $prefix.mergeref.sumstats_qc.log
+            echo "" 2>&1 | tee -a $prefix.mergeref.sumstats_qc.log
         #fi
 
         # clean up code 
@@ -856,21 +867,14 @@
             (source ./$prefix.merge.sumstatsqc.out.sh; wait)
         # Sort sumstats by chr and bp
             (source ./$prefix.sort.sumstatsqc.out.sh; wait) 
-        # Extract variants that were excluded 
-        if [ "$multicpu" == "Y" ]; then 
-            (source ./$prefix.variants.qc.multicpu.sh; wait)
-            (source ./$prefix.variants.nonqc.multicpu.sh; wait)
-            (source ./$prefix.excluded.variants.multicpu.sh; wait)
-            (source ./$prefix.cat.excluded.variants.sh; wait)
-            (source ./$prefix.extract.failed.vars.multicpu.sh; wait)
-        else 
-            (source ./$prefix.variants.qc.sh; wait)
-            (source ./$prefix.variants.nonqc.sh; wait)
-            (source ./$prefix.excluded.variants.sh; wait)
-            (source ./$prefix.cat.excluded.variants.sh; wait)
-            (source ./$prefix.extract.failed.vars.sh; wait)
-        fi
         
+        ++++++ WORK IN PROGRESS +++++
+
+        # Extract failed snps for master file 
+        if [ "$multicpu" == "Y" ]; then  
+            (source ./$prefix.extract.failed.vars.multicpu.sh; wait)
+        fi 
+
         #### Note: There is a chance that all variants in the summary statistics matches with reference panel, the $prefix.unmatched.vars.qcexclude.txt file would end up empty. This is likely to create problems in the downstream pipeline. This set of scripts will attempt to mitigate that problem by reading the first 10 rows in the chr1 reference panel for the UID, Punmatched will be indicated as NA. 
 
         checkqcexcludefile=$(cat $prefix.unmatched.vars.qcexclude.txt | wc | awk '{print $1}')
@@ -879,34 +883,29 @@
             (source ./$prefix.dummy.unmatched.sh)
         fi
 
-        # Generate Excluded variant report 
-
-        (source ./$prefix.make.merge_failed.vars.sh; wait)
+        # Generate master merge file
+        
+            (source ./$prefix.make.merge_master.vars.sh)
 
         # clean up code
-        if [ -f $prefix.excluded.variants.merged.txt ]; then 
+        if [ -f $prefix.1000G.EAS.ref.SumstatsQC.AF_0.005.INFO_0.3.AFB_0.15.results_mastercopy.txt ]; then 
             rm $prefix.merge.sumstatsqc.out.sh
             rm $prefix.consolidate.processed.files.sh
             rm $prefix.sort.sumstatsqc.out.sh
-            rm $prefix.nonqc.vars.chr*
-            rm $prefix.qc.vars.chr*
-            rm $prefix.variants.qc*.sh
-            rm $prefix.variants.nonqc*.sh
-            rm $prefix.excluded.variants*.sh 
-            rm $prefix.cat.excluded.variants.sh
-            rm $prefix.excluded.variants.chr*
             rm $prefix.extract.failed.vars.sh
             rm $prefix.extract.failed.vars.multicpu.sh
+            rm $prefix.dummy.unmatched.sh
+            rm $prefix.unmatched.vars.qcexclude.txt
             rm $prefix.altstrand.vars.qcexclude.txt
             rm $prefix.altstrandflp.vars.qcexclude.txt
-            rm $prefix.unmatched.vars.qcexclude.txt
             rm $prefix.flip.vars.qcexclude.txt
             rm $prefix.matched.vars.qcexclude.txt
+            rm $prefix.qc.vars.txt
             rm merge_failed_vars
-            rm $prefix.make.merge_failed.vars.sh
+            rm $prefix.make.merge_master.vars.sh
             rm $prefix.merge_failed.vars.r
-            rm $prefix.merge_failed.vars.r.Rout
-            rm $prefix.dummy.unmatched.sh
+
+            
 
             touch $prefix.post.processing.done
             echo "Post processing step is complete..." 2>&1 | tee -a $prefix.postprc.sumstats_qc.log
@@ -1043,9 +1042,9 @@
     ls -tr1 $prefix*.done 2>&1 | tee -a $prefix.sumstats_qc.log
     echo "----------------------------------------------" 2>&1 | tee -a $prefix.sumstats_qc.log
     echo "" 2>&1 | tee -a $prefix.sumstats_qc.log
-    echo "Please consult [include html location here] for further details" 2>&1 | tee -a $prefix.sumstats_qc.log
+    echo "Please consult https://github.com/maxzylam/SumstatsQC-dev-1 for further details" 2>&1 | tee -a $prefix.sumstats_qc.log
     echo "with regards to the SumstatsQC pipeline" 2>&1 | tee -a $prefix.sumstats_qc.log
-    echo "Sumstats QC for $sumstats completed on $DATE" 2>&1 | tee -a $prefix.sumstats_qc.log
+    echo "Sumstats QC for $sumstats completed on $(date)" 2>&1 | tee -a $prefix.sumstats_qc.log
     echo "" 2>&1 | tee -a $prefix.sumstats_qc.log
     echo "Thank you for using SumstatsQC" 2>&1 | tee -a $prefix.sumstats_qc.log
     echo "- Max Lam, PhD" 2>&1 | tee -a $prefix.sumstats_qc.log

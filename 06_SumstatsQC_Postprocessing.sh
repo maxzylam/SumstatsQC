@@ -344,74 +344,50 @@
  
     fi
 
-    # Identify variants (autosome only) that were excluded from SumstatsQC procedures
-    # 
-    for i in {1..22}
-        do 
-        echo "cat $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results.finalqc.txt | awk '{if(\$6=="$i") print \$2}' > $prefix.qc.vars.chr"$i"" 
-    done > $prefix.variants.qc.sh
 
-    for i in {1..22}
-        do
-        echo "cat $sumstats_1.qc.input.$pop.$prefix.sumstats.5.non-qc-ed.txt | awk '{if(\$3=="$i") print \$1}' > $prefix.nonqc.vars.chr"$i"" 
-    done > $prefix.variants.nonqc.sh
-    
-    for i in {1..22}
-        do
-        echo "awk 'FNR==NR{a[\$1]++;next}XXXa[\$1]' $prefix.qc.vars.chr"$i" $prefix.nonqc.vars.chr"$i" >> $prefix.excluded.variants.chr"$i""
-    done | sed 's/XXX/\!/g' > $prefix.excluded.variants.sh 
+    # Read out all variants that passed QC - SNP RSID UIDqc 
+        echo "cat $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results.finalqc.txt | awk '{print \$5,\$4,\$1,\"passedqc\"}' | sed '1,1d' | sed '1 i\SNP RSID UIDqc PASSqc' > $prefix.qc.vars.txt" > $prefix.extract.failed.vars.sh
+    # Read out all variants that failed QC - SNP AFunmex AFBunmex AMBunmex
+        echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.unmatched.qcparams.txt | awk '{print \$2, \"nomatch\"}' | sed '1,1d' | sed '1 i\SNP NoMATCH' > $prefix.unmatched.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
+    # Read out all variants that failed QC - SNP AFmat AFBmat AMBmat
+    # Read out all variants that failed QC - SNP AFflp AFBflp AMBflp
+    # Read out all variants that failed QC - SNP AFstr AFBstr AMBstr
+    # Read out all variants that failed QC - SNP AFstrf AFBstrf AMBstrf 
+        if [ "$qt" == "Binary" ]; then    
+            echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.match.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$9, \$24, \$25, \$26, \$27}' | sed '1 i\SNP AFmat INFOmat AFBmat AMBmat' > $prefix.matched.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
+            echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.flip.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$9, \$24, \$25, \$26, \$27}' | sed '1 i\SNP AFflp INFOflp AFBflp AMBflp' > $prefix.flip.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
+            echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.altstrand.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$9, \$24, \$25, \$26, \$27}' | sed '1 i\SNP AFstr INFOstr AFBstr AMBstr' > $prefix.altstrand.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
+            echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.altstrandflp.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$9, \$24, \$25, \$26, \$27}' | sed '1 i\SNP AFstrf INFOstrf AFBstrf AMBstrf' > $prefix.altstrandflp.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
+        fi
 
-    echo "UID" > $prefix.excluded.variants.txt
-    for i in {1..22}
-        do 
-        echo "cat $prefix.excluded.variants.chr"$i" >> $prefix.excluded.variants.txt"
-    done > $prefix.cat.excluded.variants.sh
+        if [ "$qt" == "Quantitative" ]; then
+            echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.match.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$9, \$23, \$24, \$25, \$26}' | sed '1 i\SNP AFmat INFOmat AFBmat AMBmat' > $prefix.matched.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
+            echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.flip.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$9, \$23, \$24, \$25, \$26}' | sed '1 i\SNP AFflp INFOflp AFBflp AMBflp' > $prefix.flip.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
+            echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.altstrand.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$9, \$23, \$24, \$25, \$26}' | sed '1 i\SNP AFstr INFOstr AFBstr AMBstr' > $prefix.altstrand.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
+            echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.altstrandflp.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$9, \$23, \$24, \$25, \$26}' | sed '1 i\SNP AFstrf INFOstrf AFBstrf AMBstrf' > $prefix.altstrandflp.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
 
-    if [ "$multicpu" == "Y" ]; then 
-        cat $prefix.variants.qc.sh | awk '{print $0, "&"}' > $prefix.variants.qc.multicpu.sh
-        cat $prefix.variants.nonqc.sh | awk '{print $0, "&"}' > $prefix.variants.nonqc.multicpu.sh
-        cat $prefix.excluded.variants.sh | awk '{print $0, "&"}' > $prefix.excluded.variants.multicpu.sh
-    fi
+        fi
 
-    # characterize failed variants
-    # Extract unmatched, failed vars for each categories
-        echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.unmatched.qcparams.txt | sed '1,1d' | awk '{print \$1, \$11}' | sed '1 i\UID Punmatched' > $prefix.unmatched.vars.qcexclude.txt" > $prefix.extract.failed.vars.sh
+        if [ "$multicpu" == "Y" ]; then
+            cat $prefix.extract.failed.vars.sh | awk '{print $0, "&"}' > $prefix.extract.failed.vars.multicpu.sh
+        fi 
 
-    if [ "$qt" == "Binary" ]; then    
-        echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.match.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$1, \$18, \$24, \$25, \$26, \$27}' | sed '1 i\UID Pmatch AFmatch INFOmatch AFBmatch AMBmatch' > $prefix.matched.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
-        echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.flip.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$1, \$18, \$24, \$25, \$26, \$27}' | sed '1 i\UID Pflip AFflip INFOflip AFBflip AMBflip' > $prefix.flip.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
-        echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.altstrand.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$1, \$18, \$24, \$25, \$26, \$27}' | sed '1 i\UID Pstrand AFstrand INFOstrand AFBstrand AMBstrand' > $prefix.altstrand.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
-        echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.altstrandflp.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$1, \$18, \$24, \$25, \$26, \$27}' | sed '1 i\UID Pstrandflp AFstrandflp INFOstrandflp AFBstrandflp AMBstrandflp' > $prefix.altstrandflp.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
-    fi
 
-    if [ "$qt" == "Quantitative" ]; then
-        echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.match.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$1, \$18, \$23, \$24, \$25, \$26}' | sed '1 i\UID Pmatch AFmatch INFOmatch AFBmatch AMBmatch' > $prefix.matched.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
-        echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.flip.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$1, \$18, \$23, \$24, \$25, \$26}' | sed '1 i\UID Pflip AFflip INFOflip AFBflip AMBflip' > $prefix.flip.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
-        echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.altstrand.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$1, \$18, \$23, \$24, \$25, \$26}' | sed '1 i\UID Pstrand AFstrand INFOstrand AFBstrand AMBstrand' > $prefix.altstrand.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
-        echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.altstrandflp.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$1, \$18, \$23, \$24, \$25, \$26}' | sed '1 i\UID Pstrandflp AFstrandflp INFOstrandflp AFBstrandflp AMBstrandflp' > $prefix.altstrandflp.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
+    #### Note: There is a chance that all variants in the summary statistics matches with reference panel, the $prefix.unmatched.vars.qcexclude.txt file would end up empty. This is likely to create problems in the downstream pipeline. This set of scripts will attempt to mitigate that problem by reading the first 10 rows in the chr1 reference panel for the UID, Punmatched will be indicated as NA. 
 
-    fi
+    echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.5.non-qc-ed.txt | head -11 | awk '{print \$2, \"NA\"}' | sed '1,1d' | sed '1 i\SNP NoMATCH' > $prefix.unmatched.vars.qcexclude.txt" > $prefix.dummy.unmatched.sh
 
-        echo "cat $prefix.excluded.variants.txt | sed '1,1d' | tr ':' ' ' | awk '{print \$1\":\"\$2\":\"\$3\":\"\$4, \$0}' | sed '1 i\UID CHR BP A1 A2' > $prefix.excluded.variants.chrbp.txt" >> $prefix.extract.failed.vars.sh
-
-    if [ "$multicpu" == "Y" ]; then
-        cat $prefix.extract.failed.vars.sh | awk '{print $0, "&"}' > $prefix.extract.failed.vars.multicpu.sh
-    fi 
-
-#### Note: There is a chance that all variants in the summary statistics matches with reference panel, the $prefix.unmatched.vars.qcexclude.txt file would end up empty. This is likely to create problems in the downstream pipeline. This set of scripts will attempt to mitigate that problem by reading the first 10 rows in the chr1 reference panel for the UID, Punmatched will be indicated as NA. 
-
-    echo "zcat $REFFILE.chr1.gz | head -11 | awk '{print \$10\":\"\$11\":\"\$3\":\"\$6, \"NA\"}' | sed '1,1d' | sed '1 i\UID Punmatched' > $prefix.unmatched.vars.qcexclude.txt" > $prefix.dummy.unmatched.sh
-
-### Merge failed vars files
+### Merge vars files
 
 DIRECTORY=$(echo $PWD | sed 's_/_\\/_g')
-EXVARS=$prefix.excluded.variants.chrbp.txt
+ORIG="$sumstats_1".qc.input."$pop".$prefix.sumstats.5.non-qc-ed.txt
+QCVARS=$prefix.qc.vars.txt
 UNMEX=$prefix.unmatched.vars.qcexclude.txt
 MATCHEX=$prefix.matched.vars.qcexclude.txt
 FLIPEX=$prefix.flip.vars.qcexclude.txt
 STRANDEX=$prefix.altstrand.vars.qcexclude.txt
 STRANDFLPEX=$prefix.altstrandflp.vars.qcexclude.txt
-OUTEX=$prefix.excluded.variants.merged.txt
+OUTEX=$prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results_mastercopy.txt
 
 cat > merge_failed_vars << writescript
 
@@ -455,18 +431,20 @@ if(require("tidyr")){
     }
 }
 
-exvars <- fread("/DIRECTORY/EXVARS")
+orig <- fread("/DIRECTORY/ORIG")
+qcvars <- fread("/DIRECTORY/QCVARS")
 unmex <- fread("/DIRECTORY/UNMEX")
 matchex <- fread("/DIRECTORY/MATCHEX")
 flipex <- fread("/DIRECTORY/FLIPEX")
 strandex <- fread("/DIRECTORY/STRANDEX")
 strandflpex <- fread("/DIRECTORY/STRANDFLPEX")
 
-merge1 <- full_join(exvars, unmex, by = "UID")
-merge2 <- full_join(merge1, matchex, by = "UID")
-merge3 <- full_join(merge2, flipex, by = "UID")
-merge4 <- full_join(merge3, strandex, by = "UID")
-merge5 <- full_join(merge4, strandflpex, by = "UID")
+merge0 <- left_join(orig, qcvars, by = "SNP")
+merge1 <- left_join(merge0, unmex, by = "SNP")
+merge2 <- left_join(merge1, matchex, by = "SNP")
+merge3 <- left_join(merge2, flipex, by = "SNP")
+merge4 <- left_join(merge3, strandex, by = "SNP")
+merge5 <- left_join(merge4, strandflpex, by = "SNP")
 
 fwrite(merge5, file="/DIRECTORY/OUTEX", quote=FALSE, compress="none", sep=" ", na="NA")
 
@@ -474,9 +452,9 @@ writescript
 
 dos2unix merge_failed_vars 
 
-echo "cat merge_failed_vars | sed 's/DIRECTORY/$DIRECTORY/g' | sed 's/EXVARS/$EXVARS/g' | sed 's/UNMEX/$UNMEX/g' | sed 's/MATCHEX/$MATCHEX/g' | sed 's/FLIPEX/$FLIPEX/g' | sed 's/STRANDEX/$STRANDEX/g' | sed 's/STRANDFLPEX/$STRANDFLPEX/g' | sed 's/OUTEX/$OUTEX/g' > $prefix.merge_failed.vars.r" > $prefix.make.merge_failed.vars.sh
+echo "cat merge_failed_vars | sed 's/DIRECTORY/$DIRECTORY/g' | sed 's/ORIG/$ORIG/g' | sed 's/QCVARS/$QCVARS/g' | sed 's/UNMEX/$UNMEX/g' | sed 's/MATCHEX/$MATCHEX/g' | sed 's/FLIPEX/$FLIPEX/g' | sed 's/STRANDEX/$STRANDEX/g' | sed 's/STRANDFLPEX/$STRANDFLPEX/g' | sed 's/OUTEX/$OUTEX/g' > $prefix.merge_failed.vars.r" > $prefix.make.merge_master.vars.sh
 
-echo "R CMD BATCH --no-save $prefix.merge_failed.vars.r" >> $prefix.make.merge_failed.vars.sh
+echo "R CMD BATCH --no-save $prefix.merge_failed.vars.r" >> $prefix.make.merge_master.vars.sh
 
 
 # Sanity checks

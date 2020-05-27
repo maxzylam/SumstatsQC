@@ -178,50 +178,59 @@
     
     # From qcparams files 
         # Number of variants fail INFO_score 
-        sumstats_ref_match_INFOSc_fail=$(cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.match.qcparams.txt | grep INFOSc_fail | wc | awk '{print $1}')
-        sumstats_ref_flip_INFOSc_fail=$(cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.flip.qcparams.txt | grep INFOSc_fail | wc | awk '{print $1}')
-        sumstats_ref_altstrand_INFOSc_fail=$(cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.altstrand.qcparams.txt | grep INFOSc_fail | wc | awk '{print $1}')
-        sumstats_ref_altstrandflip_INFOSc_fail=$(cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.altstrandflp.qcparams.txt | grep INFOSc_fail | wc | awk '{print $1}')
-        sumstats_ref_TOTAL_INFOSc_fail=$((sumstats_ref_match_INFOSc_fail + sumstats_ref_flip_INFOSc_fail + sumstats_ref_altstrand_INFOSc_fail + sumstats_ref_altstrandflip_INFOSc_fail))
+        sumstats_ref_TOTAL_INFOSc_fail=$(cat $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results_mastercopy.txt | grep INFOSc_fail | wc | awk '{print $1}')
         
         echo "There are $sumstats_ref_TOTAL_INFOSc_fail variants from $prefix sumstats that failed the INFO_score < $INFO_score threshold" 2>&1 | tee -a $prefix.extractinfo.sumstats_qc.log
         echo "" 2>&1 | tee -a $prefix.extractinfo.sumstats_qc.log
 
         # Number of variants fail AF
 
-        sumstats_ref_match_AF_fail=$(cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.match.qcparams.txt | grep AF_fail | wc | awk '{print $1}')
-        sumstats_ref_flip_AF_fail=$(cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.flip.qcparams.txt | grep AF_fail | wc | awk '{print $1}')
-        sumstats_ref_altstrand_AF_fail=$(cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.altstrand.qcparams.txt | grep AF_fail | wc | awk '{print $1}')
-        sumstats_ref_altstrandflip_AF_fail=$(cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.altstrandflp.qcparams.txt | grep AF_fail | wc | awk '{print $1}')
-        sumstats_ref_TOTAL_AF_fail=$((sumstats_ref_match_AF_fail + sumstats_ref_flip_AF_fail + sumstats_ref_altstrand_AF_fail + sumstats_ref_altstrandflip_AF_fail))
+        sumstats_ref_TOTAL_AF_fail=$(cat $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results_mastercopy.txt | grep AF_fail | wc | awk '{print $1}')
         
         echo "There are $sumstats_ref_TOTAL_AF_fail variants from $prefix sumstats that failed the AF < $AF threshold" 2>&1 | tee -a $prefix.extractinfo.sumstats_qc.log
         echo "" 2>&1 | tee -a $prefix.extractinfo.sumstats_qc.log
 
         # Number of variants fail ambiguous alleles 
 
-        sumstats_ref_match_amb_fail=$(cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.match.qcparams.txt | grep amb_fail | wc | awk '{print $1}')
-        sumstats_ref_flip_amb_fail=$(cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.flip.qcparams.txt | grep amb_fail | wc | awk '{print $1}')
-        sumstats_ref_altstrand_amb_fail=$(cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.altstrand.qcparams.txt | grep amb_fail | wc | awk '{print $1}')
-        sumstats_ref_altstrandflip_amb_fail=$(cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.altstrandflp.qcparams.txt | grep amb_fail | wc | awk '{print $1}')
-        sumstats_ref_TOTAL_amb_fail=$((sumstats_ref_match_amb_fail + sumstats_ref_flip_amb_fail + sumstats_ref_altstrand_amb_fail + sumstats_ref_altstrandflip_amb_fail))
+        sumstats_ref_TOTAL_amb_fail=$(cat $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results_mastercopy.txt | grep amb_fail | wc | awk '{print $1}')
         
         echo "There are $sumstats_ref_TOTAL_amb_fail variants from $prefix sumstats that are considered ambiguous based on AT_CG and AF of > $AMB"  2>&1 | tee -a $prefix.extractinfo.sumstats_qc.log
         echo "" 2>&1 | tee -a $prefix.extractinfo.sumstats_qc.log
 
         # Number of variants fail allele freq difference
-        sumstats_ref_match_AFB_fail=$(cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.match.qcparams.txt | grep AFB_fail | wc | awk '{print $1}')
-        sumstats_ref_flip_AFB_fail=$(cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.flip.qcparams.txt | grep AFB_fail | wc | awk '{print $1}')
-        sumstats_ref_altstrand_AFB_fail=$(cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.altstrand.qcparams.txt | grep AFB_fail | wc | awk '{print $1}')
-        sumstats_ref_altstrandflip_AFB_fail=$(cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.altstrandflp.qcparams.txt | grep AFB_fail | wc | awk '{print $1}')
-        sumstats_ref_TOTAL_AFB_fail=$((sumstats_ref_match_AFB_fail + sumstats_ref_flip_AFB_fail + sumstats_ref_altstrand_AFB_fail + sumstats_ref_altstrandflip_AFB_fail))
+
+        sumstats_ref_TOTAL_AFB_fail=$(cat $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results_mastercopy.txt | grep AFB_fail | wc | awk '{print $1}')
         
         echo "There are $sumstats_ref_TOTAL_AFB_fail variants from $prefix sumstats that have allele frequency differences > $AFB from $REFFILE"  2>&1 | tee -a $prefix.extractinfo.sumstats_qc.log
         echo "" 2>&1 | tee -a $prefix.extractinfo.sumstats_qc.log
 
+        # Number of variants with allele freq = 0.5
+
+        sumstats_ref_TOTAL_AF_05=$(cat $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results_mastercopy.txt | awk '{if($7==0.5) print $0}' | wc | awk '{print $1}')
+
+        echo "There are $sumstats_ref_TOTAL_AF_05 variants from $prefix sumstats that have allele frequencies of 0.5. These are also excluded at the final qc step"  2>&1 | tee -a $prefix.extractinfo.sumstats_qc.log
+        echo "" 2>&1 | tee -a $prefix.extractinfo.sumstats_qc.log
+
+        # Total variants excluded after QC procedures 
+
+        totalexclude=$(cat $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results_mastercopy.txt | grep -v passed | awk '{print $2}' | wc | awk '{print $1}')
+
+        echo "There are $totalexclude variants from $prefix sumstats that were excluded from the QC procedures carried out as part of the current pipeline" 2>&1 | tee -a $prefix.extractinfo.sumstats_qc.log
+        echo "" 2>&1 | tee -a $prefix.extractinfo.sumstats_qc.log
+
+        # Dupvar
+
+        cat $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results_mastercopy.txt | awk '{print $2}' | uniq -c | awk '{if($1>1) print $0}' > $prefix.dupvar.txt
+
+        dupvar=$(wc $prefix.dupvar.txt | awk '{print $1}')
+
+        echo "Note that there are $dupvar variants that are duplicated - please check if these might be relevant for your purposes" 2>&1 | tee -a $prefix.extractinfo.sumstats_qc.log
+        echo "" 2>&1 | tee -a $prefix.extractinfo.sumstats_qc.log
+
+
     # From final QC file 
         # Total number of variants passing QC
-        sumstats_ref_finalqc=$(cat $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results.finalqc.txt | wc | awk '{print $1}')
+        sumstats_ref_finalqc=$(cat $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results.finalqc.txt | sed '1,1d' | awk '{print $5}' | wc | awk '{print $1}')
 
         echo "There are $sumstats_ref_finalqc variants that passed QC procedures" 2>&1 | tee -a $prefix.extractinfo.sumstats_qc.log
         echo "" 2>&1 | tee -a $prefix.extractinfo.sumstats_qc.log

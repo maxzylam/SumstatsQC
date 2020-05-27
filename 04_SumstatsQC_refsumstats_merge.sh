@@ -207,33 +207,36 @@
 ######################################
 #### Consolidate merged variants #####
 
+        #initiate file 
+        touch $prefix.matched.variants.txt
+
         # Print match variants
         for i in {1..22}
                 do 
-                echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.4.match.chr"$i" | awk '{print \$1}' | sed '1,1d' >> $prefix.matched.variants.txt"
+                echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.4.match.chr"$i" | awk '{print \$9}' | sed '1,1d' >> $prefix.matched.variants.txt"
         done > $prefix.consolidate.matched.var1.sh
 
         # Print Allele flip variants
         for i in {1..22}
                 do 
-                echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.4.flip.chr"$i" | awk '{print \$1}' | sed '1,1d' >> $prefix.matched.variants.txt"
-        done >> $prefix.consolidate.matched.var2.sh
+                echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.4.flip.chr"$i" | awk '{print \$9}' | sed '1,1d' >> $prefix.matched.variants.txt"
+        done > $prefix.consolidate.matched.var2.sh
 
         # Print Alt Strand variants
         for i in {1..22}
                 do 
-                echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.4.altstrand.chr"$i" | awk '{print \$1}' | sed '1,1d' >> $prefix.matched.variants.txt"
-        done >> $prefix.consolidate.matched.var3.sh
+                echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.4.altstrand.chr"$i" | awk '{print \$9}' | sed '1,1d' >> $prefix.matched.variants.txt"
+        done > $prefix.consolidate.matched.var3.sh
 
         # Print Alt Strand Flip variants
         for i in {1..22}
                 do 
-                echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.4.altstrandflp.chr"$i" | awk '{print \$1}' | sed '1,1d' >> $prefix.matched.variants.txt"
-        done >> $prefix.consolidate.matched.var4.sh       
+                echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.4.altstrandflp.chr"$i" | awk '{print \$9}' | sed '1,1d' >> $prefix.matched.variants.txt"
+        done > $prefix.consolidate.matched.var4.sh       
 
 
         # Sort Uniq
-                echo "cat $prefix.matched.variants.txt | sort | uniq -c | awk '{print \$2, \"matchedvars\"}' | sed '1 i\UID UNIQ' > $prefix.matched.variants.uniq.txt" > $prefix.consolidate.match.var.uniq.sh
+                echo "cat $prefix.matched.variants.txt | sort | uniq -c | awk '{print \$2, \"matchedvars\"}' | sed '1 i\SNP UNIQ' > $prefix.matched.variants.uniq.txt" > $prefix.consolidate.match.var.uniq.sh
                 chmod +x *.sh
 
 ######################################
@@ -253,7 +256,7 @@
                 echo "library(\"dplyr\")" >> $prefix.reverse.match.chr"$i".r
                 echo "MATCH <- fread(\"$prefix.matched.variants.uniq.txt\")" >> $prefix.reverse.match.chr"$i".r
                 echo "SUMSTATS <- fread(\""$sumstats_1".qc.input."$pop".$prefix.sumstats.3.chr"$i"\")" >> $prefix.reverse.match.chr"$i".r
-                echo "NOMATCH <- anti_join(SUMSTATS, MATCH, by = \"UID\")" >> $prefix.reverse.match.chr"$i".r
+                echo "NOMATCH <- anti_join(SUMSTATS, MATCH, by = \"SNP\")" >> $prefix.reverse.match.chr"$i".r
                 echo "fwrite(NOMATCH, file=\""$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.4.unmatched.chr"$i"\", quote=FALSE, na=\"NA\", compress=\"none\", sep=\" \")" >> $prefix.reverse.match.chr"$i".r
         done
 
