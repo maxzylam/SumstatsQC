@@ -134,9 +134,11 @@
 ######################################
 #### Visualizations ##################
 
+cat $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results_mastercopy.txt | grep -v pass | awk '{print $2,$3,$4,$11}' > $prefix.xvar.txt
+
 DIRECTORY=$(echo $PWD | sed 's_/_\\/_g')
 FINALQCFILE=$prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results.finalqc.txt
-MSTFILE=$prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results_mastercopy.txt
+EXFILE=$prefix.xvar.txt
 PREFIX=$prefix
 
 ### Check variables 
@@ -147,7 +149,7 @@ echo "############################" 2>&1 | tee -a $prefix.visualz.sumstats_qc.lo
 echo "" 2>&1 | tee -a $prefix.visualz.sumstats_qc.log
 echo "DIRECTORY = $DIRECTORY" 2>&1 | tee -a $prefix.visualz.sumstats_qc.log
 echo "FINALQCFILE = $FINALQCFILE" 2>&1 | tee -a $prefix.visualz.sumstats_qc.log
-echo "MSTFILE = $MSTFILE" 2>&1 | tee -a $prefix.visualz.sumstats_qc.log
+echo "EXFILE = $EXFILE" 2>&1 | tee -a $prefix.visualz.sumstats_qc.log
 echo "PHENO = $PREFIX" 2>&1 | tee -a $prefix.visualz.sumstats_qc.log
 
 
@@ -495,13 +497,8 @@ if(require("qqman")){
 }
 
 ## Read in summary statistics 
-sumstats <- fread("/DIRECTORY/MSTFILE")
-sumstats_ex <- sumstats %>% filter(., PASSqc != "passedqc")
+sumstats <- fread("/DIRECTORY/EXFILE")
 
-
-## include columns
-gwas <- sumstats_ex %>% select(., SNP, CHR, BP, P)
-gwasex <- gwas %>% na.omit()
 
 ## scanning the snps to highlight
 
@@ -510,7 +507,7 @@ gwasex <- gwas %>% na.omit()
 png("/DIRECTORY/PREFIX_SumstatsQC_Manhattanplot_wXvars.png",height=15,width=30,units="cm",res=400,pointsize=3)
 
 
-manhattan(gwasex,suggestiveline=FALSE,cex.axis=0.95,main='')
+manhattan(sumstats,suggestiveline=FALSE,cex.axis=0.95,main='')
 
 dev.off()
 
@@ -619,7 +616,7 @@ echo "cat scatterplot_F1ref_FRQ | sed 's/PREFIX/$PREFIX/g' | sed 's/DIRECTORY/$D
 
 echo "cat scatterplot_F1_minuslogP | sed 's/PREFIX/$PREFIX/g' | sed 's/DIRECTORY/$DIRECTORY/g' | sed 's/FINALQCFILE/$FINALQCFILE/g' > $prefix.scatterplot_F1_minuslogP.r" >> $prefix.visualization.sh
 
-echo "cat manhattanplotxvars | sed 's/PREFIX/$PREFIX/g' | sed 's/MSTFILE/$MSTFILE/g' | sed 's/DIRECTORY/$DIRECTORY/g' > $prefix.manhattanplotxvars.r" >> $prefix.visualization.sh
+echo "cat manhattanplotxvars | sed 's/PREFIX/$PREFIX/g' | sed 's/EXFILE/$EXFILE/g' | sed 's/DIRECTORY/$DIRECTORY/g' > $prefix.manhattanplotxvars.r" >> $prefix.visualization.sh
 
 echo "cat manhattanplotqc | sed 's/PREFIX/$PREFIX/g' | sed 's/DIRECTORY/$DIRECTORY/g' | sed 's/FINALQCFILE/$FINALQCFILE/g' > $prefix.manhattanplotqc.r" >> $prefix.visualization.sh
 
