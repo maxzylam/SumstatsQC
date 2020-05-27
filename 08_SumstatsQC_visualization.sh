@@ -147,8 +147,7 @@ echo "############################" 2>&1 | tee -a $prefix.visualz.sumstats_qc.lo
 echo "" 2>&1 | tee -a $prefix.visualz.sumstats_qc.log
 echo "DIRECTORY = $DIRECTORY" 2>&1 | tee -a $prefix.visualz.sumstats_qc.log
 echo "FINALQCFILE = $FINALQCFILE" 2>&1 | tee -a $prefix.visualz.sumstats_qc.log
-echo "NONQCFILE = $NONQCFILE" 2>&1 | tee -a $prefix.visualz.sumstats_qc.log
-echo "EXCLUDED VARIANTS = $EXCLUDEDVARS" 2>&1 | tee -a $prefix.visualz.sumstats_qc.log
+echo "MSTFILE = $MSTFILE" 2>&1 | tee -a $prefix.visualz.sumstats_qc.log
 echo "PHENO = $PREFIX" 2>&1 | tee -a $prefix.visualz.sumstats_qc.log
 
 
@@ -501,7 +500,7 @@ sumstats_ex <- sumstats %>% filter(., PASSqc != "passedqc")
 
 
 ## include columns
-gwas <- sumstats_ex %>% select(., UID, CHR, BP, P)
+gwas <- sumstats_ex %>% select(., SNP, CHR, BP, P)
 gwasex <- gwas %>% na.omit()
 
 ## scanning the snps to highlight
@@ -620,7 +619,7 @@ echo "cat scatterplot_F1ref_FRQ | sed 's/PREFIX/$PREFIX/g' | sed 's/DIRECTORY/$D
 
 echo "cat scatterplot_F1_minuslogP | sed 's/PREFIX/$PREFIX/g' | sed 's/DIRECTORY/$DIRECTORY/g' | sed 's/FINALQCFILE/$FINALQCFILE/g' > $prefix.scatterplot_F1_minuslogP.r" >> $prefix.visualization.sh
 
-echo "cat manhattanplotxvars | sed 's/PREFIX/$PREFIX/g' | sed 's/NONQCFILE/$NONQCFILE/g' | sed 's/EXCLUDEDVARS/$EXCLUDEDVARS/g' | sed 's/DIRECTORY/$DIRECTORY/g' > $prefix.manhattanplotxvars.r" >> $prefix.visualization.sh
+echo "cat manhattanplotxvars | sed 's/PREFIX/$PREFIX/g' | sed 's/MSTFILE/$MSTFILE/g' | sed 's/DIRECTORY/$DIRECTORY/g' > $prefix.manhattanplotxvars.r" >> $prefix.visualization.sh
 
 echo "cat manhattanplotqc | sed 's/PREFIX/$PREFIX/g' | sed 's/DIRECTORY/$DIRECTORY/g' | sed 's/FINALQCFILE/$FINALQCFILE/g' > $prefix.manhattanplotqc.r" >> $prefix.visualization.sh
 
