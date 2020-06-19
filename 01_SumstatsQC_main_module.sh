@@ -1074,7 +1074,7 @@
     mv $sumstats_1*txt.gz $prefix.SumstatsQC.files
     mv $prefix*sumstats*gz $prefix.SumstatsQC.files
     mv $sumstats_1*sumstats*gz $prefix.SumstatsQC.files
-    rm $prefix.gzip.cleanup.multicpu.sh
+    rm $prefix.*.sh
     #rm $prefix*done
 
 ###############ok##############################################
