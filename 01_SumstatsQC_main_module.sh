@@ -868,7 +868,6 @@
         # Sort sumstats by chr and bp
             (source ./$prefix.sort.sumstatsqc.out.sh; wait) 
         
-        ++++++ WORK IN PROGRESS +++++
 
         # Extract failed snps for master file 
         if [ "$multicpu" == "Y" ]; then  
@@ -888,7 +887,7 @@
             (source ./$prefix.make.merge_master.vars.sh)
 
         # clean up code
-        if [ -f T2Dbbj_run4.1000G.EAS.ref.SumstatsQC.AF_0.005.INFO_0.3.AFB_0.15.results_mastercopy.txt ]; then 
+        if [ -f $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results_mastercopy.txt ]; then 
             rm $prefix.merge.sumstatsqc.out.sh
             rm $prefix.consolidate.processed.files.sh
             rm $prefix.sort.sumstatsqc.out.sh
