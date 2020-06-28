@@ -897,11 +897,6 @@
         # clean up code
         if [ -f $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results_mastercopy.txt ]; then 
 
-            cat $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results_mastercopy.txt | grep fail | awk '{print $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,"failed",$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$30,$31,$32,$33}' > $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results_failed.txt
-            cat $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results_mastercopy.txt | grep -v fail > $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results_passed.txt
-
-            cat $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results_passed.txt $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results_failed.txt > $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results_mastercopy.txt
-
             rm $prefix.merge.sumstatsqc.out.sh
             rm $prefix.consolidate.processed.files.sh
             rm $prefix.sort.sumstatsqc.out.sh
@@ -916,11 +911,7 @@
             rm $prefix.qc.vars.txt
             rm merge_failed_vars
             rm $prefix.make.merge_master.vars.sh
-            rm $prefix.merge_failed.vars.r
-            rm $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results_passed.txt
-            rm $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results_failed.txt
-
-            
+            rm $prefix.merge_failed.vars.r          
 
             touch $prefix.post.processing.done
             echo "Post processing step is complete..." 2>&1 | tee -a $prefix.postprc.sumstats_qc.log
