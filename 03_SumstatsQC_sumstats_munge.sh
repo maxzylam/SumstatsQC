@@ -130,6 +130,8 @@
 
         # Generate scripts for splitting sumstats by chr
         # also in this step CHR:BP:A1:A2 is being computed
+        # Only for chromosomes 1-22 
+        
         if [ "$qt" == "Binary" ]; then          
                 for i in {1..22}
                         do 

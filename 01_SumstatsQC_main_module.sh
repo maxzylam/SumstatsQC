@@ -402,7 +402,7 @@
         
             # Write Variant count for Pre-QC procedures
             totalsnpspreqc=$(expr $(wc -l "$sumstats_1".qc.input."$pop".$prefix.sumstats.1 | cut -d ' ' -f1) - 1)
-            echo "There are $totalsnpspreqc SNPs in PreQC Sumstats file "$sumstats_1".qc.input."$pop".$prefix.sumstats.1" 2>&1 | tee -a $prefix.standardizecol.sumstats_qc.log
+            echo "There are $totalsnpspreqc SNPs in PreQC Original Sumstats file "$sumstats_1".qc.input."$pop".$prefix.sumstats.1" 2>&1 | tee -a $prefix.standardizecol.sumstats_qc.log
             echo "" 2>&1 | tee -a $prefix.standardizecol.sumstats_qc.log
 
             # Convert file to linux readable format
@@ -447,7 +447,7 @@
 
             # Write Variant count for Pre-QC procedures
             totalsnpspreqc=$(expr $(wc -l "$sumstats_1".qc.input."$pop".$prefix.sumstats.1 | cut -d ' ' -f1) - 1)
-            echo "There are $totalsnpspreqc SNPs in PreQC Sumstats file "$sumstats_1".qc.input."$pop".$prefix.sumstats.1" 2>&1 | tee -a $prefix.standardizecol.sumstats_qc.log
+            echo "There are $totalsnpspreqc SNPs in PreQC Original Sumstats file "$sumstats_1".qc.input."$pop".$prefix.sumstats.1" 2>&1 | tee -a $prefix.standardizecol.sumstats_qc.log
             echo "" 2>&1 | tee -a $prefix.standardizecol.sumstats_qc.log
         
             # Convert file to linux readable format
@@ -645,6 +645,7 @@
             touch $prefix.munge.sumstats.done
             echo "Summary Stats Seperated by Chr..." 2>&1 | tee -a $prefix.mungestats.sumstats_qc.log
             echo "" 2>&1 | tee -a $prefix.mungestats.sumstats_qc.log
+            for i in {1..22}; do  wc *.sumstats.3.chr"$i"; done >> $prefix.mungestats.sumstats_qc.log
             cat $prefix.mungestats.sumstats_qc.log >> $prefix.sumstats_qc.log
         else 
             echo "-----------------------------------------------------" 2>&1 | tee -a $prefix.ERROR.log
@@ -711,22 +712,29 @@
         # Sort unique variants and then split them up by chr
             (source ./$prefix.consolidate.match.var.uniq.sh; wait) 
 
-            autosomalchr=$(wc $sumstats_1.qc.input.$pop.$prefix.sumstats.3.chr* | tail -1 | awk '{print $1-22}') 
-            echo "There are $autosomalchr variants from the $prefix sumstats that are autosomal;" 2>&1 | tee -a $prefix.mergeref.sumstats_qc.log
-            echo "" 2>&1 | tee -a $prefix.mergeref.sumstats_qc.log
-            matchsuccess=$(cat $prefix.matched.variants.uniq.txt | sed '1,1d' | wc | awk '{print $1}')
-            echo "There are $matchsuccess variants from the $prefix sumstats that matched with the reference panel;" 2>&1 | tee -a $prefix.mergeref.sumstats_qc.log
-            echo "" 2>&1 | tee -a $prefix.mergeref.sumstats_qc.log
         # Identify unmatch variants
         #if [ "$multicpu" == "Y" ]; then 
         #    (source ./$prefix.reverse.matching_multicpu.sh; wait)
         #else
             (source ./$prefix.reverse.matching.sh; wait)
-           
+
+        #fi
+
+        # logger
+
+            autosomalchr=$(wc $sumstats_1.qc.input.$pop.$prefix.sumstats.3.chr* | tail -1 | awk '{print $1-22}') 
+            echo "There are $autosomalchr variants from the $prefix sumstats that are autosomal;" 2>&1 | tee -a $prefix.mergeref.sumstats_qc.log
+            echo "Note: These autosomal SNPs are from chr 1-22 only..." 2>&1 | tee -a $prefix.mergeref.sumstats_qc.log
+            echo "" 2>&1 | tee -a $prefix.mergeref.sumstats_qc.log
+
+            matchsuccess=$(cat $prefix.matched.variants.uniq.txt | sed '1,1d' | wc | awk '{print $1}')
+            echo "There are $matchsuccess variants from the $prefix sumstats that matched with the reference panel; -" 2>&1 | tee -a $prefix.mergeref.sumstats_qc.log
+            echo "Note : There might be duplicates in the above number...." 2>&1 | tee -a $prefix.mergeref.sumstats_qc.log
+            echo "" 2>&1 | tee -a $prefix.mergeref.sumstats_qc.log
+
             matchfail=$(wc $sumstats_1.qc.input.$pop.$prefix.sumstats.ref.4.unmatched.chr* | tail -1 | awk '{print $1-22}')  
             echo "There are $matchfail variants from the $prefix sumstats that DID NOT match with the reference panel;" 2>&1 | tee -a $prefix.mergeref.sumstats_qc.log
             echo "" 2>&1 | tee -a $prefix.mergeref.sumstats_qc.log
-        #fi
 
         # clean up code 
 
@@ -814,7 +822,7 @@
             # Clean up files 
 
             rm $prefix.matched.variants.txt
-            rm $prefix.matched.variants.uniq.txt
+            #rm $prefix.matched.variants.uniq.txt
 
             touch $prefix.apply.qc.done
             echo "QC parameters applied to summary statistics..." 2>&1 | tee -a $prefix.applyqc.sumstats_qc.log
@@ -888,6 +896,12 @@
 
         # clean up code
         if [ -f $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results_mastercopy.txt ]; then 
+
+            cat $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results_mastercopy.txt | grep fail | awk '{print $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,"failed",$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$30,$31,$32,$33}' > $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results_failed.txt
+            cat $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results_mastercopy.txt | grep -v fail > $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results_passed.txt
+
+            cat $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results_passed.txt $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results_failed.txt > $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results_mastercopy.txt
+
             rm $prefix.merge.sumstatsqc.out.sh
             rm $prefix.consolidate.processed.files.sh
             rm $prefix.sort.sumstatsqc.out.sh
@@ -903,6 +917,8 @@
             rm merge_failed_vars
             rm $prefix.make.merge_master.vars.sh
             rm $prefix.merge_failed.vars.r
+            rm $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results_passed.txt
+            rm $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results_failed.txt
 
             
 

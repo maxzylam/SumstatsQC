@@ -133,9 +133,10 @@
 #### QC variables to be extracted
 
     # Merge with ref panel 
+    
         # Number of Autosomes that we begin SumstatsQC with
         sumstats_ref_autosomes=$(expr $(wc -l "$sumstats_1".qc.input."$pop".$prefix.sumstats.5.non-qc-ed.txt | cut -d ' ' -f1) - 1)
-        echo "There are $sumstats_ref_autosomes AUTOSOMAL variants that we begin SumstatQC pipeline with" 2>&1 | tee -a $prefix.extractinfo.sumstats_qc.log
+        echo "There are $sumstats_ref_autosomes AUTOSOMAL variants from chr 1-22 that we begin SumstatQC pipeline with" 2>&1 | tee -a $prefix.extractinfo.sumstats_qc.log
         echo "" 2>&1 | tee -a $prefix.extractinfo.sumstats_qc.log
 
         # Number of variant that have out-of-bounds pvalues
