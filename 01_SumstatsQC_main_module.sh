@@ -101,6 +101,12 @@
                 --multicpu)
                         multicpu=$VALUE
                         ;;
+                --archive)
+                        archive=$VALUE
+                        ;;
+                --bucket)
+                        bucket=$VALUE
+                        ;;
                 $)
                         echo "ERROR:unknown parameter \ "$PARAM\ ""
                         helpscript
@@ -1085,3 +1091,12 @@
     #rm $prefix*done
 
 ###############ok##############################################
+
+###############################################################
+#### Gcloud Archive
+
+    if [ "$archive" == "Y" ]; then 
+
+        (./source 10_SumstatsQC_archive --prefix=$prefix --archive=Y --bucket=$bucket)
+    fi
+###############################################################
