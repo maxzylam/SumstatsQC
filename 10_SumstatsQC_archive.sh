@@ -45,8 +45,8 @@
 
             echo "Found folder....."
 
-            if [ -z "$prefix" ]; then echo "prefix not specified"; exit 1; else "checking prefix..."; fi
-            if [ -z "$bucket" ]; then echo "bucket not specified"; exit 1; else "checking bucket..."; fi
+            if [ -z "$prefix" ]; then echo "prefix not specified"; exit 1; else echo "checking prefix..."; fi
+            if [ -z "$bucket" ]; then echo "bucket not specified"; exit 1; else echo "checking bucket..."; fi
 
             gsutil mv $prefix.SumstatsQC.files $bucket
 
