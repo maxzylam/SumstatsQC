@@ -1097,6 +1097,6 @@
 
     if [ "$archive" == "Y" ]; then 
 
-        (./source 10_SumstatsQC_archive --prefix=$prefix --archive=Y --bucket=$bucket)
+        (source ./10_SumstatsQC_archive.sh --prefix=$prefix --archive=Y --bucket=$bucket)
     fi
 ###############################################################

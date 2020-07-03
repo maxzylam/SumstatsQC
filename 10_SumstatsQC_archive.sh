@@ -39,7 +39,9 @@
     
         # find folder
 
-        if [ -f $prefix.SumstatsQC.files ]; then 
+        finalfolder=$(ls | grep $prefix.SumstatsQC.files)
+
+        if [ "$finalfolder" == "$prefix.SumstatsQC.files" ]; then 
 
             echo "Found folder....."
 
