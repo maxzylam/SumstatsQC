@@ -38,7 +38,7 @@
 
     # Archive folder
     
-    if [ "$archive" == "Y" ]; then
+    if [ "$archive" == "G" ]; then
     
         # find folder
 
