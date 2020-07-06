@@ -20,6 +20,9 @@
                 --bucket)
                         bucket=$VALUE
                         ;;
+                --localout)
+                        localout=$VALUE
+                        ;;
                 --archive)
                         archive=$VALUE
                         ;;
@@ -59,5 +62,33 @@
             exit 1
         
         fi 
+
+    elif [ "$archive" == "L"]; then 
+
+        # find folder
+
+        finalfolder=$(ls | grep $prefix.SumstatsQC.files)
+
+        if [ "$finalfolder" == "$prefix.SumstatsQC.files" ]; then 
+
+            echo "Found folder....."
+
+            if [ -z "$prefix" ]; then echo "prefix not specified"; exit 1; else echo "checking prefix..."; fi
+            if [ -z "$localout" ]; then echo "localout destination not specified"; exit 1; else echo "checking destination..."; fi
+
+            mv $prefix.SumstatsQC.files $localout
+
+        
+        else
+
+            echo "Can't seem to find sumstatsQC folder with completed files"
+            echo "Perhaps something broke during the QC procedure. Now exiting..."
+            exit 1
+        
+        fi 
+    
+    else
+
+        echo "SumstatsQC output is in the working directory. Consider shifting either to bucket or local storate desitination to save space in the working directory."
 
     fi

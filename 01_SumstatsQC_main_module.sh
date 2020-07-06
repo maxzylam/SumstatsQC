@@ -107,6 +107,9 @@
                 --bucket)
                         bucket=$VALUE
                         ;;
+                --localout)
+                        localout=$VALUE
+                        ;;
                 $)
                         echo "ERROR:unknown parameter \ "$PARAM\ ""
                         helpscript
