@@ -1101,8 +1101,12 @@
 ###############################################################
 #### Gcloud Archive
 
-    if [ "$archive" == "Y" ]; then 
+    if [ "$archive" == "G" ]; then 
 
-        (source ./10_SumstatsQC_archive.sh --prefix=$prefix --archive=Y --bucket=$bucket)
+        (source ./10_SumstatsQC_archive.sh --prefix=$prefix --archive=G --bucket=$bucket)
+
+    elif [ "$archive" == "L" ]; then 
+
+        (source ./10_SumstatsQC_archive.sh --prefix=$prefix --archive=L --localout=$localout)
     fi
 ###############################################################
