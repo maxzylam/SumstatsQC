@@ -227,8 +227,8 @@
         read Nca
         echo "what's the Nco/N_qt column number in your sumstats?"
         read Nco
-
-        else
+    
+    else
         echo "You did not enter the appropriate parameters...Thank you please try again...."
         helpscript
         exit 1
