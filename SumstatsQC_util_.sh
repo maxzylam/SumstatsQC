@@ -5,7 +5,7 @@ output=$3
 
     ### SumstatsQC utility
 
-    printf "\n#############################################/n#### SumstatsQC Utility for Generating Batch File \n#############################################\n\n" 2>&1 | tee $output.batch.log
+    printf "\n#############################################\n#### SumstatsQC Utility for Generating Batch File \n#############################################\n\n" 2>&1 | tee $output.batch.log
     printf "Analysis Initials = $(id -u -n)" 2>&1 | tee -a $output.batch.log
     printf "Date Bathfile generated = $(date)" 2>&1 | tee -a $output.batch.log
 
