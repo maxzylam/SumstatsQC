@@ -196,7 +196,7 @@ output=$3
 
         # logger 
             printf "\n BATCHFILE \n------------------\n\n" 2>&1 | tee -a $output.batch.log
-            cat $output.batch.txt >> $output.batch.log
+            cat $output.batch.txt 2>&1 | tee -a $output.batch.log
             printf "\n------------------\n\n" 2>&1 | tee -a $output.batch.log
 
     printf "\n#############################################\n#### SumstatsQC Utility Complete\041\041 \n#############################################\n\n" 2>&1 | tee -a $output.batch.log
