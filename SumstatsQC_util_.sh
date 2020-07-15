@@ -101,7 +101,7 @@ output=$3
                 if [ -z "$A1" ]; then A1=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w REF | awk '{print $2}'); fi
                 if [ -z "$A1" ]; then echo "A1 is not assigned...please check sumstats..."; fi 2>&1 | tee -a $output.batch.log
                 if [ -z "$A1" ]; then A1=unknown; fi
-                printf "A1 $A1" >> $output.batch.txt
+                echo "A1 $A1" >> $output.batch.txt
 
                 if [ -z "$A2" ]; then A2=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w A2 | awk '{print $2}'); fi
                 if [ -z "$A2" ]; then A2=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w Allele2 | awk '{print $2}'); fi
