@@ -43,9 +43,9 @@ output=$3
 
         # Define CHR    
 
-            if [ -z "$CHR" ]; then CHR=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep chr | awk '{print $2}'); fi
-            if [ -z "$CHR" ]; then CHR=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep Chr | awk '{print $2}'); fi
-            if [ -z "$CHR" ]; then CHR=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep CHR | awk '{print $2}'); fi
+            if [ -z "$CHR" ]; then CHR=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w chr | awk '{print $2}'); fi
+            if [ -z "$CHR" ]; then CHR=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w Chr | awk '{print $2}'); fi
+            if [ -z "$CHR" ]; then CHR=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w CHR | awk '{print $2}'); fi
             if [ -z "$CHR" ]; then echo "CHR is not assigned...please check sumstats..."; fi 2>&1 | tee -a $output.batch.log
             if [ -z "$CHR" ]; then CHR=unknown; fi
             echo "CHR $CHR" >> $output.batch.txt
@@ -53,11 +53,11 @@ output=$3
 
         # Define BP
 
-            if [ -z "$BP" ]; then BP=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep BP | awk '{print $2}'); fi
-            if [ -z "$BP" ]; then BP=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep pos | awk '{print $2}'); fi
-            if [ -z "$BP" ]; then BP=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep Pos | awk '{print $2}'); fi
-            if [ -z "$BP" ]; then BP=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep POS | awk '{print $2}'); fi
-            if [ -z "$BP" ]; then BP=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep position | awk '{print $2}'); fi
+            if [ -z "$BP" ]; then BP=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w BP | awk '{print $2}'); fi
+            if [ -z "$BP" ]; then BP=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w pos | awk '{print $2}'); fi
+            if [ -z "$BP" ]; then BP=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w Pos | awk '{print $2}'); fi
+            if [ -z "$BP" ]; then BP=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w POS | awk '{print $2}'); fi
+            if [ -z "$BP" ]; then BP=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w position | awk '{print $2}'); fi
             if [ -z "$BP" ]; then echo "BP is not assigned...please check sumstats..."; fi 2>&1 | tee -a $output.batch.log
             if [ -z "$BP" ]; then BP=unknown; fi
             echo "BP $BP" >> $output.batch.txt
