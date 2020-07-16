@@ -28,15 +28,20 @@ output=$3
             fi 
         # Define SNP 
             
-            if [ -z "$SNP" ]; then SNP=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep MARKER | awk '{print $2}'); fi
-            if [ -z "$SNP" ]; then SNP=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep MarkerName | awk '{print $2}'); fi
-            if [ -z "$SNP" ]; then SNP=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep rsid | awk '{print $2}'); fi
-            if [ -z "$SNP" ]; then SNP=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep rs_id | awk '{print $2}'); fi
-            if [ -z "$SNP" ]; then SNP=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep SNP | awk '{print $2}'); fi
-            if [ -z "$SNP" ]; then SNP=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep SNPID | awk '{print $2}'); fi
-            if [ -z "$SNP" ]; then SNP=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep variant | awk '{print $2}'); fi
-            if [ -z "$SNP" ]; then SNP=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep Variants | awk '{print $2}'); fi
-            if [ -z "$SNP" ]; then SNP=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep varid | awk '{print $2}'); fi
+            if [ -z "$SNP" ]; then SNP=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w MARKER | awk '{print $2}'); fi
+            if [ -z "$SNP" ]; then SNP=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w MarkerName | awk '{print $2}'); fi
+            if [ -z "$SNP" ]; then SNP=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w rsid | awk '{print $2}'); fi
+            if [ -z "$SNP" ]; then SNP=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w RSID | awk '{print $2}'); fi
+            if [ -z "$SNP" ]; then SNP=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w Rsid | awk '{print $2}'); fi
+            if [ -z "$SNP" ]; then SNP=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w rs_id | awk '{print $2}'); fi
+            if [ -z "$SNP" ]; then SNP=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w SNP | awk '{print $2}'); fi
+            if [ -z "$SNP" ]; then SNP=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w Snp | awk '{print $2}'); fi
+            if [ -z "$SNP" ]; then SNP=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w snp | awk '{print $2}'); fi
+            if [ -z "$SNP" ]; then SNP=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w SNPID | awk '{print $2}'); fi
+            if [ -z "$SNP" ]; then SNP=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w snpid | awk '{print $2}'); fi
+            if [ -z "$SNP" ]; then SNP=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w variant | awk '{print $2}'); fi
+            if [ -z "$SNP" ]; then SNP=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w Variants | awk '{print $2}'); fi
+            if [ -z "$SNP" ]; then SNP=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w varid | awk '{print $2}'); fi
             if [ -z "$SNP" ]; then echo "SNP is not assigned...please check sumstats..."; fi 2>&1 | tee -a $output.batch.log
             if [ -z "$SNP" ]; then SNP=unknown; fi 
             echo "SNP $SNP" > $output.batch.txt
@@ -117,10 +122,10 @@ output=$3
         # Define Frequency
 
             if [ -z "$FRQ" ]; then FRQ=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w AF | awk '{print $2}'); fi
-            if [ -z "$FRQ" ]; then FRQ=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep ALT_freq | awk '{print $2}'); fi
+            if [ -z "$FRQ" ]; then FRQ=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w ALT_freq | awk '{print $2}'); fi
             if [ -z "$FRQ" ]; then FRQ=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w EAF | awk '{print $2}'); fi
-            if [ -z "$FRQ" ]; then FRQ=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep EFFECT_ALLELE_FREQ | awk '{print $2}'); fi
-            if [ -z "$FRQ" ]; then FRQ=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep Freq1 | awk '{print $2}'); fi
+            if [ -z "$FRQ" ]; then FRQ=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w EFFECT_ALLELE_FREQ | awk '{print $2}'); fi
+            if [ -z "$FRQ" ]; then FRQ=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w Freq1 | awk '{print $2}'); fi
             if [ -z "$FRQ" ]; then FRQ=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w Frq | awk '{print $2}'); fi
             if [ -z "$FRQ" ]; then FRQ=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w FRQ | awk '{print $2}'); fi
             if [ -z "$FRQ" ]; then FRQ=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w MAF | awk '{print $2}'); fi
@@ -130,9 +135,9 @@ output=$3
 
         # Define INFO 
 
-            if [ -z "$INFO" ]; then INFO=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep info | awk '{print $2}'); fi
-            if [ -z "$INFO" ]; then INFO=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep INFO | awk '{print $2}'); fi
-            if [ -z "$INFO" ]; then INFO=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep OncoArray_imputation_r2 | awk '{print $2}'); fi
+            if [ -z "$INFO" ]; then INFO=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w info | awk '{print $2}'); fi
+            if [ -z "$INFO" ]; then INFO=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w INFO | awk '{print $2}'); fi
+            if [ -z "$INFO" ]; then INFO=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w OncoArray_imputation_r2 | awk '{print $2}'); fi
             if [ -z "$INFO" ]; then INFO=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w Rsq | awk '{print $2}'); fi
             if [ -z "$INFO" ]; then echo "INFO is not assigned...please check sumstats..."; fi 2>&1 | tee -a $output.batch.log
             if [ -z "$INFO" ]; then INFO=unknown; fi
@@ -140,10 +145,10 @@ output=$3
         
         # Define OR
 
-            if [ -z "$OR" ]; then OR=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep beta | awk '{print $2}'); fi
-            if [ -z "$OR" ]; then OR=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep Beta | awk '{print $2}'); fi
-            if [ -z "$OR" ]; then OR=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep BETA | awk '{print $2}'); fi
-            if [ -z "$OR" ]; then OR=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep Effect | awk '{print $2}'); fi
+            if [ -z "$OR" ]; then OR=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w beta | awk '{print $2}'); fi
+            if [ -z "$OR" ]; then OR=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w Beta | awk '{print $2}'); fi
+            if [ -z "$OR" ]; then OR=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w BETA | awk '{print $2}'); fi
+            if [ -z "$OR" ]; then OR=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w Effect | awk '{print $2}'); fi
             if [ -z "$OR" ]; then OR=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w OR | awk '{print $2}'); fi
             if [ -z "$OR" ]; then echo "OR is not assigned...please check sumstats..."; fi 2>&1 | tee -a $output.batch.log
             if [ -z "$OR" ]; then OR=unknown; fi
@@ -153,7 +158,7 @@ output=$3
 
             if [ -z "$SE" ]; then SE=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w SE | awk '{print $2}'); fi
             if [ -z "$SE" ]; then SE=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w se | awk '{print $2}'); fi
-            if [ -z "$SE" ]; then SE=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep StdErr | awk '{print $2}'); fi
+            if [ -z "$SE" ]; then SE=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w StdErr | awk '{print $2}'); fi
             if [ -z "$SE" ]; then echo "SE is not assigned...please check sumstats..."; fi 2>&1 | tee -a $output.batch.log
             if [ -z "$SE" ]; then SE=unknown; fi
             echo "SE $SE" >> $output.batch.txt       
@@ -161,10 +166,11 @@ output=$3
         # Define PVAL
 
             if [ -z "$PVAL" ]; then PVAL=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w P | awk '{print $2}'); fi
-            if [ -z "$PVAL" ]; then PVAL=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep P_BOLT | awk '{print $2}'); fi
-            if [ -z "$PVAL" ]; then PVAL=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep pval | awk '{print $2}'); fi
-            if [ -z "$PVAL" ]; then PVAL=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep p.value | awk '{print $2}'); fi
-            if [ -z "$PVAL" ]; then PVAL=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep Pvalue | awk '{print $2}'); fi
+            if [ -z "$PVAL" ]; then PVAL=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w P_BOLT | awk '{print $2}'); fi
+            if [ -z "$PVAL" ]; then PVAL=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w pval | awk '{print $2}'); fi
+            if [ -z "$PVAL" ]; then PVAL=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w PVAL | awk '{print $2}'); fi
+            if [ -z "$PVAL" ]; then PVAL=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w p.value | awk '{print $2}'); fi
+            if [ -z "$PVAL" ]; then PVAL=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w Pvalue | awk '{print $2}'); fi
             if [ -z "$PVAL" ]; then echo "PVAL is not assigned...please check sumstats..."; fi 2>&1 | tee -a $output.batch.log
             if [ -z "$PVAL" ]; then PVAL=unknown; fi
             echo "PVAL $PVAL" >> $output.batch.txt 
@@ -172,24 +178,28 @@ output=$3
         # Define Nca 
 
             if [ -z "$Nca" ]; then Nca=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w Nca | awk '{print $2}'); fi
-            if [ -z "$Nca" ]; then Nca=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep Ncase | awk '{print $2}'); fi
-            if [ -z "$Nca" ]; then Nca=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep ncase | awk '{print $2}'); fi
+            if [ -z "$Nca" ]; then Nca=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w NCa | awk '{print $2}'); fi
+            if [ -z "$Nca" ]; then Nca=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w NCA | awk '{print $2}'); fi
+            if [ -z "$Nca" ]; then Nca=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w nca | awk '{print $2}'); fi
+            if [ -z "$Nca" ]; then Nca=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w Nca | awk '{print $2}'); fi
+            if [ -z "$Nca" ]; then Nca=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w Ncase | awk '{print $2}'); fi
+            if [ -z "$Nca" ]; then Nca=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w ncase | awk '{print $2}'); fi
             if [ -z "$Nca" ]; then echo "Nca is not assigned...defaulting to 0...please check sumstats..."; fi 2>&1 | tee -a $output.batch.log
             if [ -z "$Nca" ]; then Nca=0; fi
             echo "Nca $Nca" >> $output.batch.txt 
 
         # Define Nco
 
-            if [ -z "$Nco" ]; then Nco=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep Nco | awk '{print $2}'); fi
-            if [ -z "$Nco" ]; then Nco=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep NCo | awk '{print $2}'); fi
-            if [ -z "$Nco" ]; then Nco=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep NCO | awk '{print $2}'); fi
-            if [ -z "$Nco" ]; then Nco=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep Nco | awk '{print $2}'); fi
-            if [ -z "$Nco" ]; then Nco=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep NControls | awk '{print $2}'); fi
-            if [ -z "$Nco" ]; then Nco=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep ncontrols | awk '{print $2}'); fi
-            if [ -z "$Nco" ]; then Nco=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep Neff | awk '{print $2}'); fi
-            if [ -z "$Nco" ]; then Nco=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep neff | awk '{print $2}'); fi
+            if [ -z "$Nco" ]; then Nco=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w Nco | awk '{print $2}'); fi
+            if [ -z "$Nco" ]; then Nco=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w NCo | awk '{print $2}'); fi
+            if [ -z "$Nco" ]; then Nco=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w NCO | awk '{print $2}'); fi
+            if [ -z "$Nco" ]; then Nco=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w Nco | awk '{print $2}'); fi
+            if [ -z "$Nco" ]; then Nco=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w NControls | awk '{print $2}'); fi
+            if [ -z "$Nco" ]; then Nco=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w ncontrols | awk '{print $2}'); fi
+            if [ -z "$Nco" ]; then Nco=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w Neff | awk '{print $2}'); fi
+            if [ -z "$Nco" ]; then Nco=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w neff | awk '{print $2}'); fi
             if [ -z "$Nco" ]; then Nco=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w N | awk '{print $2}'); fi
-            if [ -z "$Nco" ]; then Nco=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep n_complete_samples | awk '{print $2}'); fi
+            if [ -z "$Nco" ]; then Nco=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w n_complete_samples | awk '{print $2}'); fi
             if [ -z "$Nco" ]; then echo "Nco is not assigned...please check sumstats..."; fi 2>&1 | tee -a $output.batch.log
             if [ -z "$Nco" ]; then Nco=unknown; fi
             echo "Nco $Nco" >> $output.batch.txt 
