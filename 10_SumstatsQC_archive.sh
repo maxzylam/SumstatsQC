@@ -63,7 +63,7 @@
         
         fi 
 
-    elif [ "$archive" == "L"]; then 
+    elif [ "$archive" == "L" ]; then 
 
         # find folder
 
