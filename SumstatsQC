@@ -104,4 +104,9 @@
 ###############################################################
 
         # Execute SumstatsQC
-        (source ./01_SumstatsQC_main_module.sh --batch=$batch --batchfile=$batchfile --sumstats=$sumstats --pop=$pop --qt=$qt --INFO_score=$INFO_score --AF=$AF --AFB=$AFB --AMB=$AMB --prefix=$prefix --multicpu=$multicpu)
+        if [ "$archive" == "L" ]; then 
+            (source ./01_SumstatsQC_main_module.sh --batch=$batch --batchfile=$batchfile --sumstats=$sumstats --pop=$pop --qt=$qt --INFO_score=$INFO_score --AF=$AF --AFB=$AFB --AMB=$AMB --prefix=$prefix --multicpu=$multicpu --archive=$archive --localout=$localout)
+        
+        elif [ "$archive" == "G" ]; then 
+             (source ./01_SumstatsQC_main_module.sh --batch=$batch --batchfile=$batchfile --sumstats=$sumstats --pop=$pop --qt=$qt --INFO_score=$INFO_score --AF=$AF --AFB=$AFB --AMB=$AMB --prefix=$prefix --multicpu=$multicpu --archive=$archive --bucket=$bucket)
+        fi
