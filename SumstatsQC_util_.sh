@@ -129,6 +129,7 @@ output=$3
             if [ -z "$FRQ" ]; then FRQ=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w Frq | awk '{print $2}'); fi
             if [ -z "$FRQ" ]; then FRQ=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w FRQ | awk '{print $2}'); fi
             if [ -z "$FRQ" ]; then FRQ=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w MAF | awk '{print $2}'); fi
+            if [ -z "$FRQ" ]; then FRQ=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w AF_Allele2 | awk '{print $2}'); fi
             if [ -z "$FRQ" ]; then echo "FRQ is not assigned...please check sumstats..."; fi 2>&1 | tee -a $output.batch.log
             if [ -z "$FRQ" ]; then FRQ=unknown; fi
             echo "FRQ $FRQ" >> $output.batch.txt
@@ -169,7 +170,7 @@ output=$3
             if [ -z "$PVAL" ]; then PVAL=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w P_BOLT | awk '{print $2}'); fi
             if [ -z "$PVAL" ]; then PVAL=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w pval | awk '{print $2}'); fi
             if [ -z "$PVAL" ]; then PVAL=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w PVAL | awk '{print $2}'); fi
-            if [ -z "$PVAL" ]; then PVAL=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w p.value | awk '{print $2}'); fi
+            if [ -z "$PVAL" ]; then PVAL=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -v NA | grep -w p.value | awk '{print $2}'); fi
             if [ -z "$PVAL" ]; then PVAL=$(zcat $sumstats | head -1 | tr ' ' '\n' | cat -n | awk '{print $2,$1}' | grep -w Pvalue | awk '{print $2}'); fi
             if [ -z "$PVAL" ]; then echo "PVAL is not assigned...please check sumstats..."; fi 2>&1 | tee -a $output.batch.log
             if [ -z "$PVAL" ]; then PVAL=unknown; fi
