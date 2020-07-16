@@ -204,6 +204,20 @@ output=$3
             if [ -z "$Nco" ]; then echo "Nco is not assigned...please check sumstats..."; fi 2>&1 | tee -a $output.batch.log
             if [ -z "$Nco" ]; then Nco=unknown; fi
             echo "Nco $Nco" >> $output.batch.txt 
+        
+        # Define qt
+
+            if [ -z "$qt" ]; then 
+                
+                qt=$(cat $output.batch.txt | grep Nca | awk '{print $2}')
+
+                    if [ "$qt" == "0" ]; then 
+                        echo "Quantitative"
+                    else 
+                        echo "Binary"
+                    fi
+            fi
+
 
         # logger 
             printf "\n BATCHFILE \n------------------\n\n" 2>&1 | tee -a $output.batch.log
