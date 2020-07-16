@@ -211,10 +211,14 @@ output=$3
                 
                 qt=$(cat $output.batch.txt | grep Nca | awk '{print $2}')
 
+                    if [ -f $output.qt.txt ]; then 
+                        rm $output.qt.txt
+                    fi
+
                     if [ "$qt" == "0" ]; then 
-                        echo "Quantitative"
+                        echo "Quantitative" >> $output.qt.txt
                     else 
-                        echo "Binary"
+                        echo "Binary" >> $output.qt.txt
                     fi
             fi
 
