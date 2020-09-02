@@ -53,6 +53,7 @@ output=$3
             if [ -z "$CHR" ]; then CHR=$(zcat $sumstats | head -1 | tr ' ' '\n' | sed 's/\./_/g' | cat -n | awk '{print $2,$1}' | grep -w Chr | awk '{print $2}'); fi
             if [ -z "$CHR" ]; then CHR=$(zcat $sumstats | head -1 | tr ' ' '\n' | sed 's/\./_/g' | cat -n | awk '{print $2,$1}' | grep -w CHR | awk '{print $2}'); fi
             if [ -z "$CHR" ]; then CHR=$(zcat $sumstats | head -1 | tr ' ' '\n' | sed 's/\./_/g' | cat -n | awk '{print $2,$1}' | grep -w CHROM | awk '{print $2}'); fi
+            if [ -z "$CHR" ]; then CHR=$(zcat $sumstats | head -1 | tr ' ' '\n' | sed 's/\./_/g' | cat -n | awk '{print $2,$1}' | grep -w Chromosome | awk '{print $2}'); fi
             if [ -z "$CHR" ]; then echo "CHR is not assigned...please check sumstats..."; fi 2>&1 | tee -a $output.batch.log
             if [ -z "$CHR" ]; then CHR=unknown; fi
             echo "CHR $CHR" >> $output.batch.txt
@@ -65,6 +66,7 @@ output=$3
             if [ -z "$BP" ]; then BP=$(zcat $sumstats | head -1 | tr ' ' '\n' | sed 's/\./_/g' | cat -n | awk '{print $2,$1}' | grep -w Pos | awk '{print $2}'); fi
             if [ -z "$BP" ]; then BP=$(zcat $sumstats | head -1 | tr ' ' '\n' | sed 's/\./_/g' | cat -n | awk '{print $2,$1}' | grep -w POS | awk '{print $2}'); fi
             if [ -z "$BP" ]; then BP=$(zcat $sumstats | head -1 | tr ' ' '\n' | sed 's/\./_/g' | cat -n | awk '{print $2,$1}' | grep -w position | awk '{print $2}'); fi
+            if [ -z "$BP" ]; then BP=$(zcat $sumstats | head -1 | tr ' ' '\n' | sed 's/\./_/g' | cat -n | awk '{print $2,$1}' | grep -w Position | awk '{print $2}'); fi
             if [ -z "$BP" ]; then echo "BP is not assigned...please check sumstats..."; fi 2>&1 | tee -a $output.batch.log
             if [ -z "$BP" ]; then BP=unknown; fi
             echo "BP $BP" >> $output.batch.txt
