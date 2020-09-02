@@ -80,6 +80,7 @@ output=$3
                 if [ -z "$A1" ]; then A1=$(zcat $sumstats | head -1 | tr ' ' '\n' | sed 's/\./_/g' | cat -n | awk '{print $2,$1}' | grep -w allele2 | awk '{print $2}'); fi
                 if [ -z "$A1" ]; then A1=$(zcat $sumstats | head -1 | tr ' ' '\n' | sed 's/\./_/g' | cat -n | awk '{print $2,$1}' | grep -w NEA | awk '{print $2}'); fi
                 if [ -z "$A1" ]; then A1=$(zcat $sumstats | head -1 | tr ' ' '\n' | sed 's/\./_/g' | cat -n | awk '{print $2,$1}' | grep -w NON_EFFECT_ALLELE | awk '{print $2}'); fi
+                if [ -z "$A1" ]; then A1=$(zcat $sumstats | head -1 | tr ' ' '\n' | sed 's/\./_/g' | cat -n | awk '{print $2,$1}' | grep -w Non_Effect_allele | awk '{print $2}'); fi
                 if [ -z "$A1" ]; then A1=$(zcat $sumstats | head -1 | tr ' ' '\n' | sed 's/\./_/g' | cat -n | awk '{print $2,$1}' | grep -w alt | awk '{print $2}'); fi
                 if [ -z "$A1" ]; then A1=$(zcat $sumstats | head -1 | tr ' ' '\n' | sed 's/\./_/g' | cat -n | awk '{print $2,$1}' | grep -w ALT | awk '{print $2}'); fi
                 if [ -z "$A1" ]; then echo "A1 is not assigned...please check sumstats..."; fi 2>&1 | tee -a $output.batch.log
@@ -92,6 +93,7 @@ output=$3
                 if [ -z "$A2" ]; then A2=$(zcat $sumstats | head -1 | tr ' ' '\n' | sed 's/\./_/g' | cat -n | awk '{print $2,$1}' | grep -w allele1 | awk '{print $2}'); fi
                 if [ -z "$A2" ]; then A2=$(zcat $sumstats | head -1 | tr ' ' '\n' | sed 's/\./_/g' | cat -n | awk '{print $2,$1}' | grep -w EA | awk '{print $2}'); fi
                 if [ -z "$A2" ]; then A2=$(zcat $sumstats | head -1 | tr ' ' '\n' | sed 's/\./_/g' | cat -n | awk '{print $2,$1}' | grep -w EFFECT_ALLELE | awk '{print $2}'); fi
+                if [ -z "$A2" ]; then A2=$(zcat $sumstats | head -1 | tr ' ' '\n' | sed 's/\./_/g' | cat -n | awk '{print $2,$1}' | grep -w Effect_allele | awk '{print $2}'); fi
                 if [ -z "$A2" ]; then A2=$(zcat $sumstats | head -1 | tr ' ' '\n' | sed 's/\./_/g' | cat -n | awk '{print $2,$1}' | grep -w ref | awk '{print $2}'); fi
                 if [ -z "$A2" ]; then A2=$(zcat $sumstats | head -1 | tr ' ' '\n' | sed 's/\./_/g' | cat -n | awk '{print $2,$1}' | grep -w REF | awk '{print $2}'); fi
                 if [ -z "$A2" ]; then echo "A1 is not assigned...please check sumstats..."; fi 2>&1 | tee -a $output.batch.log
@@ -106,6 +108,7 @@ output=$3
                 if [ -z "$A1" ]; then A1=$(zcat $sumstats | head -1 | tr ' ' '\n' | sed 's/\./_/g' | cat -n | awk '{print $2,$1}' | grep -w alelle1 | awk '{print $2}'); fi
                 if [ -z "$A1" ]; then A1=$(zcat $sumstats | head -1 | tr ' ' '\n' | sed 's/\./_/g' | cat -n | awk '{print $2,$1}' | grep -w EA | awk '{print $2}'); fi
                 if [ -z "$A1" ]; then A1=$(zcat $sumstats | head -1 | tr ' ' '\n' | sed 's/\./_/g' | cat -n | awk '{print $2,$1}' | grep -w EFFECT_ALLELE | awk '{print $2}'); fi
+                if [ -z "$A1" ]; then A1=$(zcat $sumstats | head -1 | tr ' ' '\n' | sed 's/\./_/g' | cat -n | awk '{print $2,$1}' | grep -w Effect_allele | awk '{print $2}'); fi
                 if [ -z "$A1" ]; then A1=$(zcat $sumstats | head -1 | tr ' ' '\n' | sed 's/\./_/g' | cat -n | awk '{print $2,$1}' | grep -w ref | awk '{print $2}'); fi
                 if [ -z "$A1" ]; then A1=$(zcat $sumstats | head -1 | tr ' ' '\n' | sed 's/\./_/g' | cat -n | awk '{print $2,$1}' | grep -w REF | awk '{print $2}'); fi
                 if [ -z "$A1" ]; then echo "A1 is not assigned...please check sumstats..."; fi 2>&1 | tee -a $output.batch.log
@@ -116,6 +119,7 @@ output=$3
                 if [ -z "$A2" ]; then A2=$(zcat $sumstats | head -1 | tr ' ' '\n' | sed 's/\./_/g' | cat -n | awk '{print $2,$1}' | grep -w Allele2 | awk '{print $2}'); fi
                 if [ -z "$A2" ]; then A2=$(zcat $sumstats | head -1 | tr ' ' '\n' | sed 's/\./_/g' | cat -n | awk '{print $2,$1}' | grep -w NEA | awk '{print $2}'); fi
                 if [ -z "$A2" ]; then A2=$(zcat $sumstats | head -1 | tr ' ' '\n' | sed 's/\./_/g' | cat -n | awk '{print $2,$1}' | grep -w NON_EFFECT_ALLELE | awk '{print $2}'); fi
+                if [ -z "$A2" ]; then A2=$(zcat $sumstats | head -1 | tr ' ' '\n' | sed 's/\./_/g' | cat -n | awk '{print $2,$1}' | grep -w Non_Effect_allele | awk '{print $2}'); fi
                 if [ -z "$A2" ]; then A2=$(zcat $sumstats | head -1 | tr ' ' '\n' | sed 's/\./_/g' | cat -n | awk '{print $2,$1}' | grep -w alt | awk '{print $2}'); fi
                 if [ -z "$A2" ]; then A2=$(zcat $sumstats | head -1 | tr ' ' '\n' | sed 's/\./_/g' | cat -n | awk '{print $2,$1}' | grep -w ALT | awk '{print $2}'); fi
                 if [ -z "$A2" ]; then echo "A2 is not assigned...please check sumstats..."; fi 2>&1 | tee -a $output.batch.log
@@ -186,6 +190,7 @@ output=$3
             if [ -z "$PVAL" ]; then PVAL=$(zcat $sumstats | head -1 | tr ' ' '\n' | sed 's/\./_/g' | cat -n | awk '{print $2,$1}' | grep -w Pval | awk '{print $2}'); fi
             if [ -z "$PVAL" ]; then PVAL=$(zcat $sumstats | head -1 | tr ' ' '\n' | sed 's/\./_/g' | cat -n | awk '{print $2,$1}' | grep -v NA | grep -w p.value | awk '{print $2}'); fi
             if [ -z "$PVAL" ]; then PVAL=$(zcat $sumstats | head -1 | tr ' ' '\n' | sed 's/\./_/g' | cat -n | awk '{print $2,$1}' | grep -w Pvalue | awk '{print $2}'); fi
+            if [ -z "$PVAL" ]; then PVAL=$(zcat $sumstats | head -1 | tr ' ' '\n' | sed 's/\./_/g' | cat -n | awk '{print $2,$1}' | grep -w PVALUE | awk '{print $2}'); fi
             if [ -z "$PVAL" ]; then PVAL=$(zcat $sumstats | head -1 | tr ' ' '\n' | sed 's/\./_/g' | cat -n | awk '{print $2,$1}' | grep -w P.value | awk '{print $2}'); fi
             if [ -z "$PVAL" ]; then PVAL=$(zcat $sumstats | head -1 | tr ' ' '\n' | sed 's/\./_/g' | cat -n | awk '{print $2,$1}' | grep -w mtag_pval | awk '{print $2}'); fi
             if [ -z "$PVAL" ]; then echo "PVAL is not assigned...please check sumstats..."; fi 2>&1 | tee -a $output.batch.log
