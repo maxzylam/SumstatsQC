@@ -345,28 +345,60 @@
     fi
 
 
-    # Read out all variants that passed QC - SNP RSID UIDqc 
-        echo "cat $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results.finalqc.txt | awk '{print \$5,\$4,\$1,\"passedqc\"}' | sed '1,1d' | sed '1 i\SNP RSID UIDqc PASSqc' > $prefix.qc.vars.txt" > $prefix.extract.failed.vars.sh
-    # Read out all variants that failed QC - SNP AFunmex AFBunmex AMBunmex
-        echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.unmatched.qcparams.txt | awk '{print \$2, \"nomatch\"}' | sed '1,1d' | sed '1 i\SNP NoMATCH' > $prefix.unmatched.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
-    # Read out all variants that failed QC - SNP AFmat AFBmat AMBmat
-    # Read out all variants that failed QC - SNP AFflp AFBflp AMBflp
-    # Read out all variants that failed QC - SNP AFstr AFBstr AMBstr
-    # Read out all variants that failed QC - SNP AFstrf AFBstrf AMBstrf 
-        if [ "$qt" == "Binary" ]; then    
-            echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.match.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$9, \$24, \$25, \$26, \$27}' | sed '1 i\SNP AFmat INFOmat AFBmat AMBmat' > $prefix.matched.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
-            echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.flip.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$9, \$24, \$25, \$26, \$27}' | sed '1 i\SNP AFflp INFOflp AFBflp AMBflp' > $prefix.flip.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
-            echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.altstrand.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$9, \$24, \$25, \$26, \$27}' | sed '1 i\SNP AFstr INFOstr AFBstr AMBstr' > $prefix.altstrand.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
-            echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.altstrandflp.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$9, \$24, \$25, \$26, \$27}' | sed '1 i\SNP AFstrf INFOstrf AFBstrf AMBstrf' > $prefix.altstrandflp.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
-        fi
+    ## Check if there were nonRSIDs in the original set of sumstats
 
-        if [ "$qt" == "Quantitative" ]; then
-            echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.match.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$9, \$23, \$24, \$25, \$26}' | sed '1 i\SNP AFmat INFOmat AFBmat AMBmat' > $prefix.matched.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
-            echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.flip.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$9, \$23, \$24, \$25, \$26}' | sed '1 i\SNP AFflp INFOflp AFBflp AMBflp' > $prefix.flip.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
-            echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.altstrand.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$9, \$23, \$24, \$25, \$26}' | sed '1 i\SNP AFstr INFOstr AFBstr AMBstr' > $prefix.altstrand.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
-            echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.altstrandflp.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$9, \$23, \$24, \$25, \$26}' | sed '1 i\SNP AFstrf INFOstrf AFBstrf AMBstrf' > $prefix.altstrandflp.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
+        nonrsids=$(cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.5.non-qc-ed.txt | awk '{print $2}' | grep -v rs | wc | awk '{print $1-1}')
 
-        fi
+            if [ "$nonrsids" -eq 0]; then 
+
+                # Read out all variants that passed QC - SNP RSID UIDqc 
+                    echo "cat $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results.finalqc.txt | awk '{print \$5,\$4,\$1,\"passedqc\"}' | sed '1,1d' | sed '1 i\SNP RSID UIDqc PASSqc' > $prefix.qc.vars.txt" > $prefix.extract.failed.vars.sh
+                # Read out all variants that failed QC - SNP AFunmex AFBunmex AMBunmex
+                    echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.unmatched.qcparams.txt | awk '{print \$2, \"nomatch\"}' | sed '1,1d' | sed '1 i\SNP NoMATCH' > $prefix.unmatched.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
+                # Read out all variants that failed QC - SNP AFmat AFBmat AMBmat
+                # Read out all variants that failed QC - SNP AFflp AFBflp AMBflp
+                # Read out all variants that failed QC - SNP AFstr AFBstr AMBstr
+                # Read out all variants that failed QC - SNP AFstrf AFBstrf AMBstrf 
+                    if [ "$qt" == "Binary" ]; then    
+                        echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.match.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$9, \$24, \$25, \$26, \$27}' | sed '1 i\SNP AFmat INFOmat AFBmat AMBmat' > $prefix.matched.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
+                        echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.flip.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$9, \$24, \$25, \$26, \$27}' | sed '1 i\SNP AFflp INFOflp AFBflp AMBflp' > $prefix.flip.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
+                        echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.altstrand.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$9, \$24, \$25, \$26, \$27}' | sed '1 i\SNP AFstr INFOstr AFBstr AMBstr' > $prefix.altstrand.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
+                        echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.altstrandflp.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$9, \$24, \$25, \$26, \$27}' | sed '1 i\SNP AFstrf INFOstrf AFBstrf AMBstrf' > $prefix.altstrandflp.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
+                    fi
+
+                    if [ "$qt" == "Quantitative" ]; then
+                        echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.match.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$9, \$23, \$24, \$25, \$26}' | sed '1 i\SNP AFmat INFOmat AFBmat AMBmat' > $prefix.matched.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
+                        echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.flip.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$9, \$23, \$24, \$25, \$26}' | sed '1 i\SNP AFflp INFOflp AFBflp AMBflp' > $prefix.flip.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
+                        echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.altstrand.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$9, \$23, \$24, \$25, \$26}' | sed '1 i\SNP AFstr INFOstr AFBstr AMBstr' > $prefix.altstrand.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
+                        echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.altstrandflp.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$9, \$23, \$24, \$25, \$26}' | sed '1 i\SNP AFstrf INFOstrf AFBstrf AMBstrf' > $prefix.altstrandflp.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
+
+                    fi
+            elif [ "$nonrsids" -gt 1 ];then 
+
+                # Read out all variants that passed QC - SNP RSID UIDqc 
+                    echo "cat $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results.finalqc.txt | awk '{print \$2,\$4,\$1,\"passedqc\"}' | sed '1,1d' | sed '1 i\UID RSID UIDqc PASSqc' > $prefix.qc.vars.txt" > $prefix.extract.failed.vars.sh
+                # Read out all variants that failed QC - SNP AFunmex AFBunmex AMBunmex
+                    echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.unmatched.qcparams.txt | awk '{print \$1, \"nomatch\"}' | sed '1,1d' | sed '1 i\UID NoMATCH' > $prefix.unmatched.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
+                # Read out all variants that failed QC - SNP AFmat AFBmat AMBmat
+                # Read out all variants that failed QC - SNP AFflp AFBflp AMBflp
+                # Read out all variants that failed QC - SNP AFstr AFBstr AMBstr
+                # Read out all variants that failed QC - SNP AFstrf AFBstrf AMBstrf 
+                    if [ "$qt" == "Binary" ]; then    
+                        echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.match.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$1, \$24, \$25, \$26, \$27}' | sed '1 i\UID AFmat INFOmat AFBmat AMBmat' > $prefix.matched.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
+                        echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.flip.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$1, \$24, \$25, \$26, \$27}' | sed '1 i\UID AFflp INFOflp AFBflp AMBflp' > $prefix.flip.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
+                        echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.altstrand.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$1, \$24, \$25, \$26, \$27}' | sed '1 i\UID AFstr INFOstr AFBstr AMBstr' > $prefix.altstrand.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
+                        echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.altstrandflp.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$1, \$24, \$25, \$26, \$27}' | sed '1 i\UID AFstrf INFOstrf AFBstrf AMBstrf' > $prefix.altstrandflp.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
+                    fi
+
+                    if [ "$qt" == "Quantitative" ]; then
+                        echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.match.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$1, \$23, \$24, \$25, \$26}' | sed '1 i\UID AFmat INFOmat AFBmat AMBmat' > $prefix.matched.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
+                        echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.flip.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$1, \$23, \$24, \$25, \$26}' | sed '1 i\UID AFflp INFOflp AFBflp AMBflp' > $prefix.flip.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
+                        echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.altstrand.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$1, \$23, \$24, \$25, \$26}' | sed '1 i\UID AFstr INFOstr AFBstr AMBstr' > $prefix.altstrand.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
+                        echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.altstrandflp.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$1, \$23, \$24, \$25, \$26}' | sed '1 i\UID AFstrf INFOstrf AFBstrf AMBstrf' > $prefix.altstrandflp.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
+
+                    fi
+            fi
+
 
         if [ "$multicpu" == "Y" ]; then
             cat $prefix.extract.failed.vars.sh | awk '{print $0, "&"}' > $prefix.extract.failed.vars.multicpu.sh
@@ -388,67 +420,134 @@ FLIPEX=$prefix.flip.vars.qcexclude.txt
 STRANDEX=$prefix.altstrand.vars.qcexclude.txt
 STRANDFLPEX=$prefix.altstrandflp.vars.qcexclude.txt
 OUTEX=$prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results_mastercopy.txt
+    
+    if [ "$nonrsids" -eq 0]; then 
 
-cat > merge_failed_vars << writescript
+        echo "
 
-#! /usr/bin/Rscript
+        #! /usr/bin/Rscript
 
-## Load R packages for Merging Files 
+        ## Load R packages for Merging Files 
 
-if(require("data.table")){
-    print("data.table is loaded correctly")
-} else {
-    print("trying to install data.table")
-    install.packages("data.table")
-    if(require(data.table)){
-        print("data.table installed and loaded")
-    } else {
-        stop("could not install data.table")
-    }
-}
+        if(require(\"data.table\")){
+            print(\"data.table is loaded correctly\")
+        } else {
+            print(\"trying to install data.table\")
+            install.packages(\"data.table\")
+            if(require(data.table)){
+                print(\"data.table installed and loaded\")
+            } else {
+                stop(\"could not install data.table\")
+            }
+        }
 
-if(require("dplyr")){
-    print("dplyr is loaded correctly")
-} else {
-    print("trying to install data.table")
-    install.packages("dplyr")
-    if(require(dplyr)){
-        print("dplyr installed and loaded")
-    } else {
-        stop("could not install dplyr")
-    }
-}
+        if(require(\"dplyr\")){
+            print(\"dplyr is loaded correctly\")
+        } else {
+            print(\"trying to install data.table\")
+            install.packages(\"dplyr\")
+            if(require(dplyr)){
+                print(\"dplyr installed and loaded\")
+            } else {
+                stop(\"could not install dplyr\")
+            }
+        }
 
-if(require("tidyr")){
-    print("tidyr is loaded correctly")
-} else {
-    print("trying to install data.table")
-    install.packages("tidyr")
-    if(require(tidyr)){
-        print("tidyr installed and loaded")
-    } else {
-        stop("could not install tidyr")
-    }
-}
+        if(require(\"tidyr\")){
+            print(\"tidyr is loaded correctly\")
+        } else {
+            print(\"trying to install data.table\")
+            install.packages(\"tidyr\")
+            if(require(tidyr)){
+                print(\"tidyr installed and loaded\")
+            } else {
+                stop(\"could not install tidyr\")
+            }
+        }
 
-orig <- fread("/DIRECTORY/ORIG")
-qcvars <- fread("/DIRECTORY/QCVARS")
-unmex <- fread("/DIRECTORY/UNMEX")
-matchex <- fread("/DIRECTORY/MATCHEX")
-flipex <- fread("/DIRECTORY/FLIPEX")
-strandex <- fread("/DIRECTORY/STRANDEX")
-strandflpex <- fread("/DIRECTORY/STRANDFLPEX")
+        orig <- fread(\"/DIRECTORY/ORIG\")
+        qcvars <- fread(\"/DIRECTORY/QCVARS\")
+        unmex <- fread(\"/DIRECTORY/UNMEX\")
+        matchex <- fread(\"/DIRECTORY/MATCHEX\")
+        flipex <- fread(\"/DIRECTORY/FLIPEX\")
+        strandex <- fread(\"/DIRECTORY/STRANDEX\")
+        strandflpex <- fread(\"/DIRECTORY/STRANDFLPEX\")
 
-merge0 <- left_join(orig, qcvars, by = "SNP")
-merge1 <- left_join(merge0, unmex, by = "SNP")
-merge2 <- left_join(merge1, matchex, by = "SNP")
-merge3 <- left_join(merge2, flipex, by = "SNP")
-merge4 <- left_join(merge3, strandex, by = "SNP")
-merge5 <- left_join(merge4, strandflpex, by = "SNP")
+        merge0 <- left_join(orig, qcvars, by = \"SNP\")
+        merge1 <- left_join(merge0, unmex, by = \"SNP\")
+        merge2 <- left_join(merge1, matchex, by = \"SNP\")
+        merge3 <- left_join(merge2, flipex, by = \"SNP\")
+        merge4 <- left_join(merge3, strandex, by = \"SNP\")
+        merge5 <- left_join(merge4, strandflpex, by = \"SNP\")
 
-fwrite(merge5, file="/DIRECTORY/OUTEX", quote=FALSE, compress="none", sep=" ", na="NA")
+        fwrite(merge5, file=\"/DIRECTORY/OUTEX\", quote=FALSE, compress=\"none\", sep=\" \", na=\"NA\")
 
-writescript
+        " > merge_failed_vars 
+
+    elif [ "$nonrsids" -gt 1 ];then 
+
+
+        echo "
+
+        #! /usr/bin/Rscript
+
+        ## Load R packages for Merging Files 
+
+        if(require(\"data.table\")){
+            print(\"data.table is loaded correctly\")
+        } else {
+            print(\"trying to install data.table\")
+            install.packages(\"data.table\")
+            if(require(data.table)){
+                print(\"data.table installed and loaded\")
+            } else {
+                stop(\"could not install data.table\")
+            }
+        }
+
+        if(require(\"dplyr\")){
+            print(\"dplyr is loaded correctly\")
+        } else {
+            print(\"trying to install data.table\")
+            install.packages(\"dplyr\")
+            if(require(dplyr)){
+                print(\"dplyr installed and loaded\")
+            } else {
+                stop(\"could not install dplyr\")
+            }
+        }
+
+        if(require(\"tidyr\")){
+            print(\"tidyr is loaded correctly\")
+        } else {
+            print(\"trying to install data.table\")
+            install.packages(\"tidyr\")
+            if(require(tidyr)){
+                print(\"tidyr installed and loaded\")
+            } else {
+                stop(\"could not install tidyr\")
+            }
+        }
+
+        orig <- fread(\"/DIRECTORY/ORIG\")
+        qcvars <- fread(\"/DIRECTORY/QCVARS\")
+        unmex <- fread(\"/DIRECTORY/UNMEX\")
+        matchex <- fread(\"/DIRECTORY/MATCHEX\")
+        flipex <- fread(\"/DIRECTORY/FLIPEX\")
+        strandex <- fread(\"/DIRECTORY/STRANDEX\")
+        strandflpex <- fread(\"/DIRECTORY/STRANDFLPEX\")
+
+        merge0 <- left_join(orig, qcvars, by = \"UID\")
+        merge1 <- left_join(merge0, unmex, by = \"UID\")
+        merge2 <- left_join(merge1, matchex, by = \"UID\")
+        merge3 <- left_join(merge2, flipex, by = \"UID\")
+        merge4 <- left_join(merge3, strandex, by = \"UID\")
+        merge5 <- left_join(merge4, strandflpex, by = \"UID\")
+
+        fwrite(merge5, file=\"/DIRECTORY/OUTEX\", quote=FALSE, compress=\"none\", sep=\" \", na=\"NA\")
+
+        " > merge_failed_vars 
+    fi
 
 dos2unix merge_failed_vars 
 
