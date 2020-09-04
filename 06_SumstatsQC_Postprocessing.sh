@@ -373,7 +373,8 @@
                         echo "cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.ref.5.altstrandflp.qcparams.txt | grep fail | sed '1,1d' | awk '{print \$9, \$23, \$24, \$25, \$26}' | sed '1 i\SNP AFstrf INFOstrf AFBstrf AMBstrf' > $prefix.altstrandflp.vars.qcexclude.txt" >> $prefix.extract.failed.vars.sh
 
                     fi
-            elif [ "$nonrsids" -gt 1 ];then 
+                    
+            elif [ "$nonrsids" -gt 1 ]; then 
 
                 # Read out all variants that passed QC - SNP RSID UIDqc 
                     echo "cat $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results.finalqc.txt | awk '{print \$2,\$4,\$1,\"passedqc\"}' | sed '1,1d' | sed '1 i\UID RSID UIDqc PASSqc' > $prefix.qc.vars.txt" > $prefix.extract.failed.vars.sh
