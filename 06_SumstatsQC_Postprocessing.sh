@@ -349,7 +349,7 @@
 
         nonrsids=$(cat "$sumstats_1".qc.input."$pop".$prefix.sumstats.5.non-qc-ed.txt | awk '{print $2}' | grep -v rs | wc | awk '{print $1-1}')
 
-            if [ "$nonrsids" -eq 0]; then 
+            if [ "$nonrsids" -eq 0 ]; then 
 
                 # Read out all variants that passed QC - SNP RSID UIDqc 
                     echo "cat $prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results.finalqc.txt | awk '{print \$5,\$4,\$1,\"passedqc\"}' | sed '1,1d' | sed '1 i\SNP RSID UIDqc PASSqc' > $prefix.qc.vars.txt" > $prefix.extract.failed.vars.sh
@@ -421,7 +421,7 @@ STRANDEX=$prefix.altstrand.vars.qcexclude.txt
 STRANDFLPEX=$prefix.altstrandflp.vars.qcexclude.txt
 OUTEX=$prefix.$REFFILE.SumstatsQC.AF_$AF.INFO_$INFO_score.AFB_$AFB.results_mastercopy.txt
     
-    if [ "$nonrsids" -eq 0]; then 
+    if [ "$nonrsids" -eq 0 ]; then 
 
         echo "
 

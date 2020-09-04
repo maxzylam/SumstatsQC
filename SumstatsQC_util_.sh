@@ -141,6 +141,7 @@ output=$3
             if [ -z "$FRQ" ]; then FRQ=$(zcat $sumstats | head -1 | tr ' ' '\n' | sed 's/\./_/g' | cat -n | awk '{print $2,$1}' | grep -w meta_frq | awk '{print $2}'); fi
             if [ -z "$FRQ" ]; then FRQ=$(zcat $sumstats | head -1 | tr ' ' '\n' | sed 's/\./_/g' | cat -n | awk '{print $2,$1}' | grep -w EAF | awk '{print $2}'); fi
             if [ -z "$FRQ" ]; then FRQ=$(zcat $sumstats | head -1 | tr ' ' '\n' | sed 's/\./_/g' | cat -n | awk '{print $2,$1}' | grep -w effectAlleleFreq | awk '{print $2}'); fi
+            if [ -z "$FRQ" ]; then FRQ=$(zcat $sumstats | head -1 | tr ' ' '\n' | sed 's/\./_/g' | cat -n | awk '{print $2,$1}' | grep -w A1_FREQ | awk '{print $2}'); fi
             if [ -z "$FRQ" ]; then echo "FRQ is not assigned...please check sumstats..."; fi 2>&1 | tee -a $output.batch.log
             if [ -z "$FRQ" ]; then FRQ=unknown; fi
             echo "FRQ $FRQ" >> $output.batch.txt
