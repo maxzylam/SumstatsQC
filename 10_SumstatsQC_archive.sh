@@ -53,7 +53,7 @@
 
             gsutil mv $prefix.SumstatsQC.files $bucket
 
-            rm -r $prefix.SumstatsQC.files
+            
         
         else
 

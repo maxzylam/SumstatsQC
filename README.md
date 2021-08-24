@@ -1,6 +1,6 @@
-# SumstatsQC-dev-1
+# SumstatsQC
 
-Development version of GWAS Summary Statistics QC Pipeline
+GWAS Summary Statistics Quality Control v0.1
 
 ## Background
 
@@ -8,7 +8,30 @@ Common variant GWAS have been ubiquitous in identifying underlying biology in nu
 
 ## Overview
 
-The SumstatsQC pipeline is divided into nine modules that is controlled by a main pipeline wrapper - "SumstatsQC". An additional utility module is available for archiving the completed SumstatsQC files into a google drive bucket of Google Drive SDK is set up in the user's system. The pipeline runs primarily in interactive mode, and the user has the option of performing the pipeline in "singlecpu" mode or "multicpu" mode that leverages on multhreaded operations. 
+The SumstatsQC pipeline is divided into nine modules that is controlled by a main pipeline wrapper - "SumstatsQC". An additional utility module is available for archiving the completed SumstatsQC files into a google drive bucket if Google Drive SDK is set up in the user's system. The pipeline runs primarily in interactive mode, and the user has the option of performing the pipeline in "singlecpu" mode or "multicpu" mode that leverages on multhreaded operations. 
+
+### Google cloud 
+
+Analysis using the SumstatsQC pipeline was carried out at part of the manuscript "Dissecting Biological Pathways of Psychopathology using Cognitive Genomics" by Lam et al.,  implemented on a google cloud virtual machine. 
+
+A single virtual machine was set up with 22 CPUs - analyses was carried out in interactive mode  (Run in Google Shell)
+
+```
+gcloud compute instances create vm-name --project=project-name --zone=us-central1-a --machine-type=n2-custom-22-88064 --network-interface=network-tier=PREMIUM,subnet=default --maintenance-policy=MIGRATE --service-account=service@developer.gserviceaccount.com --scopes=https://www.googleapis.com/auth/devstorage.read_only,https://www.googleapis.com/auth/logging.write,https://www.googleapis.com/auth/monitoring.write,https://www.googleapis.com/auth/servicecontrol,https://www.googleapis.com/auth/service.management.readonly,https://www.googleapis.com/auth/trace.append --tags=http-server,https-server --image=debian-9-stretch-v20210817 --image-project=debian-cloud --boot-disk-size=500GB --boot-disk-type=pd-balanced --boot-disk-device-name=bootdisk-name --reservation-affinity=any
+```
+
+### Setting up SumstatsQC pipeline  
+
+```
+git clone 
+
+
+
+### Reference files 
+
+Reference files are available for download at the following location: 
+
+https://personal.broadinstitute.org/hhuang//public//sumstatsQC_reference/
 
 ### Dependencies
 
@@ -41,7 +64,7 @@ Please run the script as follows
   --batchfile={batch.txt}             ### batch column definitions
   --sumstats={sumstatsfile.gz}        ### summary statistics
   --qt={Binary|Quantitative}          ### Types of traits
-  --pop={1000g_eas,                   ### string based on 1000G/HRC/SG10K
+  --pop={1000g_eas,                   ### string based on EUR or EAS ancestry from 1000 Genomes
          1000g_eur} 
   --INFO_score=0.3                    ### Imputation quality score, could also be Rsq, default=0.3
   --AF=0.005                          ### Effect Allele frequency, default=0.005
