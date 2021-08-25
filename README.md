@@ -23,15 +23,23 @@ gcloud compute instances create vm-name --project=project-name --zone=us-central
 ### Setting up SumstatsQC pipeline  
 
 ```
-git clone 
-
-
+git clone https://github.com/maxzylam/SumstatsQC
+```
 
 ### Reference files 
 
 Reference files are available for download at the following location: 
 
 https://personal.broadinstitute.org/hhuang//public//sumstatsQC_reference/
+
+Important - 
+(i) The analysis should be carried out with the SumstatsQC folder
+(ii) Reference files should be downloaded into the same SumstatsQC folder
+
+```
+wget https://personal.broadinstitute.org/hhuang//public//sumstatsQC_reference/EAS_ref/*.gz
+wget https://personal.broadinstitute.org/hhuang//public//sumstatsQC_reference/EUR_ref/*.gz
+```
 
 ### Dependencies
 
@@ -42,6 +50,40 @@ The pipeline is ran on bash and R. Required dependencies for R
 - ggplot2
 - qqman
 
+Getting R set up on google cloud virtual machine is as follows
+Run one line at a time
+
+```
+sudo apt install dirmngr apt-transport-https ca-certificates software-properties-common gnupg2
+sudo apt-key adv --keyserver hkp://pgp.mit.edu --recv-key 'E19F5F87128899B192B1A2C2AD5F960A256A04AF'
+sudo add-apt-repository 'deb https://cloud.r-project.org/bin/linux/debian stretch-cran35/'
+sudo apt update
+sudo apt upgrade
+sudo apt install r-base r-base-dev
+sudo apt install libcurl4-openssl-dev
+sudo apt install libssl-dev
+sudo apt install libxml2-dev 
+```
+
+Open the R console - and enter the following commands  
+
+```
+R
+
+install.packages("data.table")
+install.packages("qqman")
+install.packages("tidyverse")
+```
+
+Note: say yes when prompted to create a personal R library
+
+### Demo data set 
+
+The demo data set for the current code could be downloaded via the following command 
+
+```
+wget https://personal.broadinstitute.org/hhuang//public//sumstatsQC_reference/Demo_data/demo.cognition.data.txt.gz
+```
 
 ### **Wrapper Module**
 
@@ -295,4 +337,40 @@ This would be in the range of common GWAS variants.
 
 ```logfile
 gs://sumstatsqc_analysis_1/pheno1_run1.SumstatsQC.files/pheno1_run1.sumstats_qc.log
+```
+
+
+### SumstatsQC demo analysis 
+
+The following analysis is carried out on the GWAS summary statistics reported in Trampush et al., 2017
+
+**STEP1**
+
+Make sure that the following files are in the same folder
+
+(1) reference files 
+(2) sumstats
+(3) Optional: batchfile 
+
+**STEP2 (optional)**
+
+Generate batchfile based on input GWAS summary statistics. Although we indicated here that this step is optional, it will be useful if there were large numbers of summmary statistics that were going to be processed. 
+
+```
+./SumstatsQC_util_.sh demo.cognition.data.txt.gz REF demo
+```
+This code generates the batch file
+option in the first position is the input GWAS summary statistic file 
+option in the second position is REF/ALT - if REF - A1 is the reference allele if ALT A2 is the reference allele
+option in the third position is the output prefix for the batch file
+
+**STEP3**
+Once the batch file is generated, use the mkdir command to create a folder that the output files could be saved. 
+The folder could be created anywhere on the directory as long as the path is supplied when the SumstatsQC code is carried out. 
+
+Run the following analysis
+
+```
+SumstatsQC --batch=Y --batchfile=demo.batch.txt --sumstats=demo.cognition.data.txt.gz --pop=1000g_eur --qt=Quantitative --INFO_score=0.3 --AF=0.00
+5 --AFB=0.15 --AMB=0.35 --prefix=demo_sumstats --multicpu=Y --archive=L --localout=/home/SumstatsQC/output
 ```

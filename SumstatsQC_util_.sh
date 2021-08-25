@@ -73,7 +73,7 @@ output=$3
 
         # Define Alleles
 
-            if [ "$Reference_Allele" == "R" ]; then
+            if [ "$Reference_Allele" == "ALT" ]; then
                 if [ -z "$A1" ]; then A1=$(zcat $sumstats | head -1 | tr ' ' '\n' | sed 's/\./_/g' | cat -n | awk '{print $2,$1}' | grep -w A2 | awk '{print $2}'); fi
                 if [ -z "$A1" ]; then A1=$(zcat $sumstats | head -1 | tr ' ' '\n' | sed 's/\./_/g' | cat -n | awk '{print $2,$1}' | grep -w a2 | awk '{print $2}'); fi
                 if [ -z "$A1" ]; then A1=$(zcat $sumstats | head -1 | tr ' ' '\n' | sed 's/\./_/g' | cat -n | awk '{print $2,$1}' | grep -w Allele2 | awk '{print $2}'); fi
