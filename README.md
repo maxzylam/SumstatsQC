@@ -12,7 +12,7 @@ The SumstatsQC pipeline is divided into nine modules that is controlled by a mai
 
 ### Google cloud 
 
-Analysis using the SumstatsQC pipeline was carried out at part of the manuscript "Dissecting Biological Pathways of Psychopathology using Cognitive Genomics" by Lam et al.,  implemented on a google cloud virtual machine. 
+Analysis using the SumstatsQC pipeline was carried out at part of the manuscript "Dissecting Biological Pathways of Psychopathology using Cognitive Genomics" by Lam et al - implemented on a google cloud virtual machine. 
 
 A single virtual machine was set up with 22 CPUs - analyses was carried out in interactive mode  (Run in Google Shell)
 
@@ -44,10 +44,8 @@ wget https://personal.broadinstitute.org/hhuang//public//sumstatsQC_reference/EU
 ### Dependencies
 
 The pipeline is ran on bash and R. Required dependencies for R 
-- dplyr
-- tidyr
+- tidyverse
 - data.table
-- ggplot2
 - qqman
 
 Getting R set up on google cloud virtual machine is as follows
@@ -365,6 +363,7 @@ option in the second position is REF/ALT - if REF - A1 is the reference allele i
 option in the third position is the output prefix for the batch file
 
 **STEP3**
+
 Once the batch file is generated, use the mkdir command to create a folder that the output files could be saved. 
 The folder could be created anywhere on the directory as long as the path is supplied when the SumstatsQC code is carried out. 
 
